@@ -1,6 +1,7 @@
 // Prøvedagen som level: venteværelse, papirer, kontrolprøve, kørsel, dom.
 // Nerverne trænes ved at gentage ritualet, ikke ved at læse om det.
-import { runDrive, verdictHTML } from './koersel.js';
+import { runSim } from './bykoersel.js';
+import { verdictHTML } from './verdict.js';
 import { drawCard, SECTIONS } from '../data/kontrol.js';
 import { pickSensor } from '../data/sensors.js';
 
@@ -89,7 +90,7 @@ export function mount(container) {
   }
 
   function drive() {
-    stop = runDrive(container, { routeId: 'bytur', sensor, showFaults: false, title: 'Prøvedagen', back: '#/', onDone: (r) => { day.drive = r; verdict(); } });
+    stop = runSim(container, { mode: 'exam', sensor, showFaults: false, back: '#/', onDone: (r) => { day.drive = r; verdict(); } });
   }
 
   function verdict() {

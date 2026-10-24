@@ -29,7 +29,7 @@ Det, han *ikke* har brug for, og som vi fravalgte: endnu en teoriquiz, en kørse
 
 | Modul | Færdigt | Mangler |
 |---|---|---|
-| Byturen (kørespillet) | Pseudo-3D-motor i canvas, rat/gas/brems/blink, spejle og skulderblik som tryk, 12 bedømte situationer på 3,2 km, live-notater, bedømmelsesskema | Flere ruter (landevej/motorvej, mørke, regn), bakkemanøvrer og parkering, lyd (motor, blinkrelæ), bedre køretøjssprites, haptik |
+| Bykørsel (3D) | By som vejnet med 20 kryds, alle krydstyper, trafikanter der følger reglerne, fri kørsel og prøverute med anvisninger, live-bedømmelse, spejle og skulderblik i 3D (se SIMULATION.md) | Bakmanøvrer og parkering, motorvej, mørke og regn, flere vognbaner, lyd, flere byer |
 | Hurtige beslutninger | 26 frysebilleder i 4 bedømmelsesområder, 2,2 s, feedback, replay | Flere scenarier |
 | Skulderblik-rytme | 8 manøvrer, 12 runder, stigende tempo | Variation i rutinen (fx dobbelt spejlcheck før hårdt stop) |
 | Fareopfattelse | 10 klip, DVSA-scoring, mønster-detektion, frysebillede ved farens start | Rigtige dashcam-klip (eget optaget, slørede plader), flere "ingen fare"-klip |

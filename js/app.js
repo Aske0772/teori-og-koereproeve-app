@@ -2,10 +2,7 @@ import { get, save, readiness, STAMPS, STAMP_LIMIT, reset } from './state.js';
 import { SENSORS } from './data/sensors.js';
 import { hasDanishVoice, hush } from './voice.js';
 import { esc } from './ui.js';
-import { createGame } from './engine/game.js';
-import { createRenderer, VIEW } from './engine/render.js';
-import { ROUTES } from './data/routes.js';
-import * as koersel from './games/koersel.js';
+import * as bykoersel from './games/bykoersel.js';
 import * as beslutning from './games/beslutning.js';
 import * as skulderblik from './games/skulderblik.js';
 import * as fare from './games/fare.js';
@@ -19,27 +16,28 @@ const app = document.getElementById('app');
 const tabs = document.getElementById('tabs');
 let cleanup = null;
 
-/* ---------- hjem: spillet kører selv bag titlen ---------- */
-function attract(canvas) {
+/* ---------- hjem: byen lever bag titlen ---------- */
+async function attract(canvas) {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const route = ROUTES.bytur.build();
-  const game = createGame(route, { ghost: true, showFaults: false });
-  const r = createRenderer(canvas);
-  const G = game.g;
-  G.player.z = 60 * 5; G.player.speed = 9; G.player.x = 0.5;
+  const [{ createSim }, { createView }, { createAutopilot }] = await Promise.all([import('./sim/sim.js'), import('./sim/view3d.js'), import('./sim/autopilot.js')]);
+  if (!canvas.isConnected) return () => {};
+  const sim = createSim({ mode: 'free', cars: 14 });
+  sim.ex.E.over = true;   // ingen bedømmelse her
+  const ap = createAutopilot(sim);
+  const view = createView(canvas, sim.net, { camera: 'chase', maxDpr: 1.25 });
+  view.setCamera('chase');
   let raf = null, last = performance.now(), alive = true;
+  for (let i = 0; i < 60 * 3; i++) { ap.step(1 / 60); sim.step(1 / 60); }
   const frame = now => {
-    if (!alive) return;
+    if (!alive || !canvas.isConnected) return;
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
-    G.input.gas = G.player.speed < 10; G.input.brake = false;
-    G.input.steer = Math.max(-1, Math.min(1, (0.5 - G.player.x) * 3));
-    if (!reduce) game.update(dt);
-    r.draw(G);
+    if (!reduce) sim.advance(dt, step => ap.step(step));
+    view.render(sim, dt, null);
     raf = requestAnimationFrame(frame);
   };
-  r.draw(G);
-  if (!reduce) raf = requestAnimationFrame(frame);
-  return () => { alive = false; cancelAnimationFrame(raf); };
+  view.render(sim, 0.016, null);
+  raf = requestAnimationFrame(frame);
+  return () => { alive = false; cancelAnimationFrame(raf); view.dispose(); };
 }
 
 function home() {
@@ -54,11 +52,11 @@ function home() {
   app.innerHTML = `
   <section class="screen" style="padding-top:0">
     <div class="hero">
-      <canvas width="${VIEW.W}" height="${VIEW.H}" aria-hidden="true"></canvas>
+      <canvas class="city" aria-hidden="true"></canvas>
       <div class="hero-copy">
         <h1><span class="line"><span>Køre-</span></span><span class="line"><span>prøven</span></span></h1>
-        <p>Kør byturen, mens sensoren noterer. Samme fire fejlniveauer som til den rigtige prøve.</p>
-        <div class="hero-cta"><button class="cta" onclick="location.hash='#/spil/koersel'">Kør byturen</button><button class="cta ghost" onclick="location.hash='#/proeve'">Prøvedag</button></div>
+        <p>Kør selv rundt i byen, mens sensoren giver anvisninger og noterer. Samme regler og fejlniveauer som til den rigtige prøve.</p>
+        <div class="hero-cta"><button class="cta" onclick="location.hash='#/spil/bykoersel?vis=1'">Kør med sensor</button><button class="cta ghost" onclick="location.hash='#/spil/bykoersel?m=fri'">Fri kørsel</button></div>
       </div>
     </div>
 
@@ -100,7 +98,8 @@ function train() {
     <div class="section">
       <h2>Bag rattet</h2>
       <ul class="menu">
-        <li class="wide"><button onclick="location.hash='#/spil/koersel'"><span class="t">Byturen</span><span class="d">3,2 km med kryds, rundkørsel, cyklister og lyskryds. Sensoren siger til undervejs.</span><span class="meta">${b('vigepligt')}</span></button></li>
+        <li class="wide"><button onclick="location.hash='#/spil/bykoersel?vis=1'"><span class="t">Bykørsel med sensor</span><span class="d">2,7 km prøverute med lyskryds, stopskilt, rundkørsel, cyklister og fodgængere. Fejl vises med det samme.</span><span class="meta">${b('vigepligt')}</span></button></li>
+        <li><button onclick="location.hash='#/spil/bykoersel?m=fri'"><span class="t">Fri kørsel</span><span class="d">Kør hvor du vil i byen, med kort.</span><span class="meta weak">Kort</span></button></li>
         <li><button onclick="location.hash='#/spil/skulderblik'"><span class="t">Skulderblik-rytme</span><span class="d">Spejl, spejl, blink, skulder. Tempoet stiger.</span><span class="meta">${b('skulderblik')}</span></button></li>
         <li><button onclick="location.hash='#/spil/fare'"><span class="t">Fareopfattelse</span><span class="d">Tryk, når faren begynder. Point for at se den tidligt.</span><span class="meta">${b('fare')}</span></button></li>
         <li><button onclick="location.hash='#/spil/beslutning'"><span class="t">Hurtige beslutninger</span><span class="d">Billedet fryser. Du har 2 sekunder.</span><span class="meta">${b('orientering')}</span></button></li>
@@ -159,7 +158,8 @@ const routes = {
   '/traen': train,
   '/proeve': p => proevedag.mount(app, p),
   '/indstillinger': settings,
-  '/spil/koersel': p => koersel.mount(app, p),
+  '/spil/bykoersel': p => bykoersel.mount(app, p),
+  '/spil/koersel': p => bykoersel.mount(app, { vis: '1' }),
   '/spil/beslutning': p => beslutning.mount(app, p),
   '/spil/skulderblik': p => skulderblik.mount(app, p),
   '/spil/fare': p => fare.mount(app, p),
@@ -168,10 +168,11 @@ const routes = {
   '/spil/passager': p => passager.mount(app, p),
   '/spil/skilt': p => skilt.mount(app, p),
 };
-const PLAYING = ['/spil/koersel', '/proeve'];
+const PLAYING = [];
 
 function render() {
   if (typeof cleanup === 'function') { try { cleanup(); } catch {} }
+  document.body.classList.remove('playing');
   cleanup = null; hush();
   const [path, query] = location.hash.replace(/^#/, '').split('?');
   const fn = routes[path] || home;
@@ -179,6 +180,7 @@ function render() {
   document.body.classList.toggle('playing', PLAYING.includes(path));
   const r = fn(params);
   if (typeof r === 'function') cleanup = r;
+  else if (r && typeof r.then === 'function') { const mine = {}; cleanup = mine; r.then(c => { if (cleanup === mine) cleanup = c; else if (typeof c === 'function') c(); }); }
   window.scrollTo(0, 0);
   renderTabs(path);
 }
