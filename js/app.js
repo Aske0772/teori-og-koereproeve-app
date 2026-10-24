@@ -3,6 +3,7 @@ import { SENSORS } from './data/sensors.js';
 import { hasDanishVoice, hush } from './voice.js';
 import { esc } from './ui.js';
 import * as bykoersel from './games/bykoersel.js';
+import * as koerselstraening from './games/koerselstraening.js';
 import * as beslutning from './games/beslutning.js';
 import * as skulderblik from './games/skulderblik.js';
 import * as fare from './games/fare.js';
@@ -55,8 +56,8 @@ function home() {
       <canvas class="city" aria-hidden="true"></canvas>
       <div class="hero-copy">
         <h1><span class="line"><span>Køre-</span></span><span class="line"><span>prøven</span></span></h1>
-        <p>Kør selv rundt i byen, mens sensoren giver anvisninger og noterer. Samme regler og fejlniveauer som til den rigtige prøve.</p>
-        <div class="hero-cta"><button class="cta" onclick="location.hash='#/spil/bykoersel?vis=1'">Kør med sensor</button><button class="cta ghost" onclick="location.hash='#/spil/bykoersel?m=fri'">Fri kørsel</button></div>
+        <p>Bilen kører prøveruten og stopper, hver gang du skal orientere dig. Eller kør selv, mens sensoren giver anvisninger og noterer. Samme regler som til den rigtige prøve.</p>
+        <div class="hero-cta"><button class="cta" onclick="location.hash='#/spil/traening'">Kørselstræning</button><button class="cta ghost" onclick="location.hash='#/spil/bykoersel?vis=1'">Kør selv</button></div>
       </div>
     </div>
 
@@ -98,6 +99,7 @@ function train() {
     <div class="section">
       <h2>Bag rattet</h2>
       <ul class="menu">
+        <li class="wide"><button onclick="location.hash='#/spil/traening'"><span class="t">Kørselstræning</span><span class="d">Bilen kører selv prøveruten og stopper, når du skal orientere dig. Tryk på spejle, skulderblik og blink, og vælg om du kører eller holder tilbage.</span><span class="meta weak">Ny</span></button></li>
         <li class="wide"><button onclick="location.hash='#/spil/bykoersel?vis=1'"><span class="t">Bykørsel med sensor</span><span class="d">2,7 km prøverute med lyskryds, stopskilt, rundkørsel, cyklister og fodgængere. Fejl vises med det samme.</span><span class="meta">${b('vigepligt')}</span></button></li>
         <li><button onclick="location.hash='#/spil/bykoersel?m=fri'"><span class="t">Fri kørsel</span><span class="d">Kør hvor du vil i byen, med kort.</span><span class="meta weak">Kort</span></button></li>
         <li><button onclick="location.hash='#/spil/skulderblik'"><span class="t">Skulderblik-rytme</span><span class="d">Spejl, spejl, blink, skulder. Tempoet stiger.</span><span class="meta">${b('skulderblik')}</span></button></li>
@@ -158,6 +160,7 @@ const routes = {
   '/traen': train,
   '/proeve': p => proevedag.mount(app, p),
   '/indstillinger': settings,
+  '/spil/traening': p => koerselstraening.mount(app, p),
   '/spil/bykoersel': p => bykoersel.mount(app, p),
   '/spil/koersel': p => bykoersel.mount(app, { vis: '1' }),
   '/spil/beslutning': p => beslutning.mount(app, p),

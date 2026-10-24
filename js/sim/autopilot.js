@@ -1,6 +1,6 @@
 // Autopilot: kører din bil efter reglerne. Bruges bag forsidens titel og til at teste sensoren.
 import { pointAt, projectOn, angDiff } from './geom.js';
-import { lightState, otherHasPriority } from './network.js';
+import { lightState, otherHasPriority, relation } from './network.js';
 
 export function createAutopilot(sim, opts = {}) {
   const { net, player: p } = sim;
@@ -36,28 +36,38 @@ export function createAutopilot(sim, opts = {}) {
     return pointAt(c.outLane.path, pr.s + la - c.path.len);
   }
 
+  // returnerer en grund (tekst), hvis du skal holde tilbage, ellers false
   function mustYield(lane, conn) {
     const node = conn.node;
-    if (lane.control === 'light') { const s = lightState(node, lane); if (s !== 'green') return true; }
+    if (lane.control === 'light') { const s = lightState(node, lane); if (s !== 'green') return `Lyset er ${{ red: 'rødt', yellow: 'gult', redyellow: 'rødt og gult' }[s] || s}.`; }
     for (const c of sim.traffic.cars) {
       if (c.nodeId === node.id) {
-        if (node.type === 'roundabout') { if (c.inLane !== lane && sim.traffic.ringConflict(c, conn, 4.6)) return true; continue; }
-        if (c.inLane !== lane) return true;
+        if (node.type === 'roundabout') { if (c.inLane !== lane && sim.traffic.ringConflict(c, conn, 4.6)) return 'En bil kører allerede rundt i rundkørslen og kommer forbi dig.'; continue; }
+        if (c.inLane !== lane) return 'En anden bil er midt i krydset.';
         continue;
       }
       if (!c.approachLane || c.approachLane.to !== node || c.approachLane === lane) continue;
-      if (node.type === 'roundabout') { if (sim.traffic.upstreamEntering(node, lane, c.approachLane, c)) return true; continue; }
-      if (c.dist / Math.max(c.v, 0.8) < 5.5 && c.dist < 70 && otherHasPriority(node, lane, conn.turn, c.approachLane, c.turnGuess)) return true;
+      if (node.type === 'roundabout') { if (sim.traffic.upstreamEntering(node, lane, c.approachLane, c)) return 'En bil er på vej ind i rundkørslen lige før dig og kører forbi dig.'; continue; }
+      if (c.dist / Math.max(c.v, 0.8) < 5.5 && c.dist < 70 && otherHasPriority(node, lane, conn.turn, c.approachLane, c.turnGuess)) return priorityReason(lane, conn, c.approachLane);
     }
-    if (sim.traffic.cyclistCrossing(conn, 3.6)) return true;
+    if (sim.traffic.cyclistCrossing(conn, 3.6)) return 'En cyklist krydser den vej, du skal køre.';
     if (conn.turn === 'right' && lane.cycle) {
       const E = lane.path.pts[1];
       for (const cy of sim.traffic.cyclists) {
         const along = (cy.x - E.x) * lane.dir.x + (cy.y - E.y) * lane.dir.y, lat = (cy.x - E.x) * lane.right.x + (cy.y - E.y) * lane.right.y;
-        if (Math.abs(lat - 2.65) < 1.6 && along > -30 && along < 12 && cy.cp.dir.x * lane.dir.x + cy.cp.dir.y * lane.dir.y > 0.9) return true;
+        if (Math.abs(lat - 2.65) < 1.6 && along > -30 && along < 12 && cy.cp.dir.x * lane.dir.x + cy.cp.dir.y * lane.dir.y > 0.9) return 'En cyklist kommer bagfra på cykelstien. Du holder tilbage, før du drejer ind foran.';
       }
     }
     return false;
+  }
+
+  function priorityReason(lane, conn, oLane) {
+    const rel = relation(lane, oLane);
+    if (lane.control === 'yield') return 'Du har ubetinget vigepligt, og der kommer trafik på vejen, du skal ud på.';
+    if (lane.control === 'stop') return 'Der kommer trafik på tværvejen, som du skal holde tilbage for.';
+    if (rel === 'opposite') return 'Du skal til venstre, og der kommer en modkørende bil. Den skal frem først.';
+    if (rel === 'right' && lane.control === 'right') return 'Der kommer en bil fra højre. Den har forkørselsret (højre vigepligt).';
+    return 'Der kommer trafik, der har forkørselsret.';
   }
 
   function step(dt) {
@@ -73,7 +83,7 @@ export function createAutopilot(sim, opts = {}) {
       vT = (lane.limit / 3.6) * 0.9 * (bad.speed || 1);
       if (p.blinker && loc.s > 12 && (!c || c.turn === 'straight' || c.node.type === 'bend' || c.node.type === 'pass') && !sim.ex.E.pull && st.phase === 'drive' && loc.lat < 0.4) blink(p.blinker);
       if (st.phase === 'start') {
-        if (say('s1')) blink('left');
+        if (say('s1') && p.blinker !== 'left') blink('left');
         if (st.t > 0.6 && say('s2')) look('rear');
         if (st.t > 1.0 && say('s3')) look('left');
         if (st.t > 1.6) { look('shoulderLeft'); st.phase = 'drive'; }
@@ -104,7 +114,7 @@ export function createAutopilot(sim, opts = {}) {
         if (dz > 2.8 && dz < 40 && z.zebra.peds.some(q => q.state === 'wait' || q.state === 'cross')) vT = Math.min(vT, Math.max(0, (dz - 4) * 0.4));
       }
       if (sim.ex.E.pull) {
-        if (say('p1')) { look('rear'); blink('right'); }
+        if (say('p1')) { look('rear'); if (p.blinker !== 'right') blink('right'); }
         if (st.t > 0 && say('p2')) look('right');
         const dd = sim.ex.E.pull.s - loc.s;
         vT = Math.min(vT, Math.max(0, dd * 0.35));
@@ -139,5 +149,5 @@ export function createAutopilot(sim, opts = {}) {
     p.input.brake = aDes < -0.15 ? Math.min(1, -aDes / 7) : 0;
   }
 
-  return { step, st };
+  return { step, st, mustYield };
 }

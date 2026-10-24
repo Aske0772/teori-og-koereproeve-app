@@ -33,5 +33,8 @@ Fire fejlniveauer som i retningslinjerne. Spillets dom er en fast regel; den rig
 - Simulation og visning er adskilt: `js/sim/network.js` (vejnet, regler for hvem der holder tilbage), `traffic.js` (biler, cyklister, fodgængere, lys), `player.js` (bilmodel), `examiner.js` (sensor, rute, bedømmelse), `view3d.js` (3D). Simulationen kører med fast tidsskridt på 60 Hz.
 - Ydelse: statiske ting tegnes som instanser (huse, træer, lygtepæle, skilte, vejstriber), biler som én flettet geometri hver. Omkring 80 draw calls pr. billede plus tre små spejle.
 
+## Kørselstræning
+Bilen kører selv (samme autopilot som bag forsiden) prøveruten, og simulationen fryser ved hvert stoppunkt (`js/sim/coach.js`). Spejlene og skulderblikket virker, mens den står stille, så du kan se trafikken bag dig. Stoppunkter: udkørsel fra kantsten, ca. 55 m før et sving (spejle og blink), lige før krydset (skulderblik og kør eller hold tilbage), udkørsel af rundkørsel, fodgænger ved fodgængerfelt, ny hastighedsgrænse og standsning ved postkassen. Om du skal holde tilbage, afgøres af den samme funktion, som autopiloten kører efter, i det øjeblik billedet fryser. Testet uden browser over 10 trafikscenarier: alle gennemført, 30 til 33 stop pr. tur, alle rigtige svar rettet som rigtige. I omkring 80 % af krydsene er det rigtige svar "Kører", fordi der er frit. Det er realistisk, men betyder at svaret ofte er det samme.
+
 ## Ikke med i denne omgang
 Bakkemanøvrer og parkering i bås, motorvej, mørke og regn, flere vognbaner, lyd. Den gamle pseudo-3D-tur fjernes.
