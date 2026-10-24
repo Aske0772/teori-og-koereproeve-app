@@ -42,7 +42,7 @@ export function mount(container, params = {}) {
       if (i >= cards.length) return done(cards.length, hit, browse);
       const c = cards[i];
       container.innerHTML = `<section class="screen">${topbar('Kontrolspørgsmål', { step: `${i + 1} af ${cards.length}` })}
-        <div class="flash">
+        <div class="flashcard">
           <div class="topic">${esc(SECTIONS[c.section])}</div>
           <div class="q">${esc(c.q)}</div>
           <div class="a" id="a" hidden>

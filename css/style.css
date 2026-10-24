@@ -221,12 +221,12 @@ body.playing { padding-bottom: 0; }
 .score-scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin: 10px 0; }
 .score-scale span { height: 8px; border-radius: 3px; background: var(--surface-2); }
 .score-scale span.lit { background: var(--ok); }
-.flash { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s4) var(--s3); min-height: 220px; display: flex; flex-direction: column; }
-.flash .topic { color: var(--text-2); font-size: 13px; }
-.flash .q { font-family: var(--f-display); font-size: 20px; font-weight: 500; line-height: 1.2; margin: 6px 0 12px; }
-.flash .a { border-top: 1px dashed var(--line-2); padding-top: 12px; margin-top: auto; }
-.flash .a p { margin: 0 0 6px; }
-.flash .a .how { color: var(--text-2); font-size: 14px; }
+.flashcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s4) var(--s3); min-height: 220px; display: flex; flex-direction: column; }
+.flashcard .topic { color: var(--text-2); font-size: 13px; }
+.flashcard .q { font-family: var(--f-display); font-size: 20px; font-weight: 500; line-height: 1.2; margin: 6px 0 12px; }
+.flashcard .a { border-top: 1px dashed var(--line-2); padding-top: 12px; margin-top: auto; }
+.flashcard .a p { margin: 0 0 6px; }
+.flashcard .a .how { color: var(--text-2); font-size: 14px; }
 .check-list { list-style: none; padding: 0; margin: 0; }
 .check-list li { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--line); }
 .check-list li:last-child { border-bottom: 0; }

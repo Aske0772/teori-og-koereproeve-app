@@ -77,6 +77,21 @@ export function runSim(container, { mode = 'exam', showFaults = mode !== 'exam',
   </section>`;
   document.body.classList.add('playing');
 
+  // iOS Safari tolker rat + pedal (to fingre) som knibe-zoom og dobbelttryk som zoom.
+  // Mens man kører, låses siden: zoom nulstilles og bevægelser afvises.
+  const vp = document.querySelector('meta[name=viewport]');
+  const vpWas = vp?.getAttribute('content');
+  vp?.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover');
+  const noGesture = e => e.preventDefault();
+  const noPinch = e => { if (e.touches && e.touches.length > 1) e.preventDefault(); };
+  let lastEnd = 0;
+  const noDoubleTap = e => { const now = performance.now(); if (now - lastEnd < 350 && e.target.closest('.sim')) e.preventDefault(); lastEnd = now; };
+  const lockOpts = { passive: false };
+  document.addEventListener('gesturestart', noGesture, lockOpts);
+  document.addEventListener('gesturechange', noGesture, lockOpts);
+  document.addEventListener('touchmove', noPinch, lockOpts);
+  document.addEventListener('touchend', noDoubleTap, lockOpts);
+
   const $ = id => container.querySelector('#' + id);
   let cueTimer = null, noteTimer = null;
   const sim = createSim({
@@ -237,6 +252,11 @@ export function runSim(container, { mode = 'exam', showFaults = mode !== 'exam',
     clearTimeout(cueTimer); clearTimeout(noteTimer); clearTimeout(shoulderT);
     window.removeEventListener('keydown', kd); window.removeEventListener('keyup', ku);
     document.body.classList.remove('playing');
+    document.removeEventListener('gesturestart', noGesture, lockOpts);
+    document.removeEventListener('gesturechange', noGesture, lockOpts);
+    document.removeEventListener('touchmove', noPinch, lockOpts);
+    document.removeEventListener('touchend', noDoubleTap, lockOpts);
+    if (vp && vpWas) vp.setAttribute('content', vpWas);
     view.dispose();
     if (window.__sim === sim) delete window.__sim;
   }

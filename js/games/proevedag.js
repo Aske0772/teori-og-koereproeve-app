@@ -71,7 +71,7 @@ export function mount(container) {
       const c = cards[i];
       shell(`${timeline(2)}
         <div class="sensor-line"><div class="avatar" style="background:${sensor.color}">${sensor.initials}</div><div class="bubble"><div class="who">Opgavekort · ${esc(SECTIONS[c.section])}</div><div class="say">${esc(c.q)}</div></div></div>
-        <div class="flash" style="min-height:0">
+        <div class="flashcard" style="min-height:0">
           <div class="a" id="a" hidden style="border-top:0;padding-top:0"><p><b>Kravet:</b> ${esc(c.a)}</p><p class="how"><b>Sådan viser du det:</b> ${esc(c.how)}</p></div>
           <div class="btnrow" id="reveal" style="margin-top:0"><button class="btn full" id="show">Jeg har vist det, tjek svaret</button></div>
           <div class="btnrow" id="rate" hidden style="margin-top:0"><button class="btn ghost full" id="miss">Jeg kunne ikke</button><button class="btn full" id="hit">Jeg kunne</button></div>
