@@ -17,7 +17,7 @@ Ingen backend, ingen konto, ingen data forlader telefonen. Ren HTML, CSS og Java
 | **Kontrolspørgsmål** | Alle seks afsnit fra kontrolprøven som kort: spørgsmål, krav og *sådan viser du det*. Du bedømmer selv. De kort, du ikke kunne, kommer oftere. | Kunne / trukket. |
 | **Find det på bilen** | Skattejagt-tjekliste til en rigtig bil (TWI-mærke, bremsevæske, reflekser …). | Afkrydsning. |
 | **Passagertilstand** | Sid ved siden af én, der kører, og tæl de ting, sensoren ville notere. | Tælling. |
-| **Prøvedagen** | Hele ritualet som ét level: venteværelse med åndedræt og hvis-så-plan, papirer, opgavekort med tre kontrolnumre + spejle, 12 beslutninger, dom med bedømmelsesskema. | Samlet. |
+| **Prøvedagen** | Hele ritualet som ét level: venteværelse med åndedræt og hvis-så-plan, papirer, opgavekort med tre kontrolnumre + spejle, hele byturen med fejlene skjult som i virkeligheden, dom med bedømmelsesskema. | Samlet. |
 | **Skiltet på dagen** | Ét spørgsmål om dagen. | — |
 
 Tastatur på computer: piletaster/WASD, Q/E blink, Z/C skulderblik, 1/2/3 spejle.
