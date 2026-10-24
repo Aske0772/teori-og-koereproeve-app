@@ -113,7 +113,7 @@ export function runSim(container, { mode = 'exam', showFaults = mode !== 'exam',
   const tap = (id, fn) => $(id).addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); fn(); });
   tap('b-left', () => sim.blink('left'));
   tap('b-right', () => sim.blink('right'));
-  const glance = (id, el) => { sim.look(id); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); };
+  const glance = (id, el) => { sim.look(id); el.classList.remove('glance'); void el.offsetWidth; el.classList.add('glance'); el.addEventListener('animationend', () => el.classList.remove('glance'), { once: true }); };
   tap('m-rear', () => glance('rear', $('m-rear')));
   tap('m-left', () => glance('left', $('m-left')));
   tap('m-right', () => glance('right', $('m-right')));

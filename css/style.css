@@ -271,12 +271,12 @@ body.playing #app { max-width: none; padding: 0; }
 .street { flex: 1; text-align: center; font-family: var(--f-display); font-size: 13px; color: #f4f6f8; text-shadow: 0 1px 4px rgba(0,0,0,.6); min-height: 1em; pointer-events: none; }
 .limit { width: 42px; height: 42px; border-radius: 50%; background: #f4f6f8; border: 5px solid #c8322b; display: grid; place-items: center; font-family: var(--f-display); font-weight: 700; font-size: 14px; color: #16181b; }
 
-.mirror { position: absolute; border: 3px solid #17191c; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,.35); transition: border-color .15s; }
+.mirror { position: absolute; background: transparent; padding: 0; min-height: 0; border: 3px solid #17191c; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,.35); transition: border-color .15s; }
 .mirror button { position: absolute; inset: -8px; background: transparent; border: 0; border-radius: 14px; padding: 0; }
 .mirror.rear { top: calc(env(safe-area-inset-top) + 60px); left: 50%; transform: translateX(-50%); width: min(40%, 280px); aspect-ratio: 3.4; }
 .mirror.left, .mirror.right { bottom: 15%; width: min(22%, 170px); aspect-ratio: 1.55; }
 .mirror.left { left: 10px; } .mirror.right { right: 10px; }
-.mirror.flash { animation: mflash .6s ease-out; }
+.mirror.glance { animation: mflash .6s ease-out; }
 @keyframes mflash { 0% { border-color: var(--amber); } 100% { border-color: #17191c; } }
 
 .shoulder-btn { position: absolute; top: 30%; height: 30%; width: 44px; border: 0; color: rgba(255,255,255,.75); font-family: var(--f-display); font-size: 10px; background: linear-gradient(90deg, rgba(15,17,20,.5), transparent); padding: 0; }
