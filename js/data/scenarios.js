@@ -41,7 +41,7 @@ export const SCENARIOS = [
     id: 'hoejresving-cyklist',
     criterion: 'vigepligt',
     cue: 'Ved næste kryds drejer du til højre',
-    scene: { env: 'by', cyclePath: true, junction: { d: 0.3, side: 'right' }, speed: 22, limit: 50, blinker: 'right', mirrorRight: 'cyclist', mirrorRear: 'car', objects: [{ type: 'cyclist', lane: 'cycleR', d: 0.08, approach: 0.02 }, { type: 'sign', sign: 'cykelsti', lane: 'sidewalkR', d: 0.6 }] },
+    scene: { env: 'by', cyclePath: true, junction: { d: 0.3, side: 'right' }, speed: 22, limit: 50, blinker: 'right', mirrorRight: 'cyclist', mirrorRear: 'car', objects: [{ type: 'cyclist', lane: 'cycleR', d: 0.3, approach: 0.04 }, { type: 'sign', sign: 'cykelsti', lane: 'sidewalkR', d: 0.5 }] },
     choices: [
       { t: 'Hold tilbage, lad cyklisten passere', kind: 'correct', why: 'Når du drejer til højre, har du vigepligt for cyklister på cykelstien, der kører ligeud. Cyklisten i sidespejlet er på vej forbi dig.' },
       { t: 'Drej nu, du er foran', kind: 'critical', why: 'Du klemmer cyklisten. Manglende vigepligt for cyklister ved højresving er en af de klassiske grunde til ikke bestået — og en af de hyppigste alvorlige ulykker i byerne.' },

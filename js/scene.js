@@ -6,8 +6,8 @@ const W = 400, H = 250, HORIZON = 112;
 const yAt = d => HORIZON + (H - HORIZON) * Math.pow(1 - d, 1.7);
 const scaleAt = d => 0.08 + 0.92 * Math.pow(1 - d, 1.5);
 // vejkanter
-const xl = d => 10 + (183 - 10) * d;
-const xr = d => 390 - (390 - 217) * d;
+const xl = d => 34 + (183 - 34) * d;
+const xr = d => 366 - (366 - 217) * d;
 const roadW = d => xr(d) - xl(d);
 
 export const laneX = (lane, d) => {
@@ -15,10 +15,10 @@ export const laneX = (lane, d) => {
   switch (lane) {
     case 'own': return xr(d) - w * 0.26;
     case 'oncoming': return xl(d) + w * 0.26;
-    case 'cycleR': return xr(d) + w * 0.11;
-    case 'cycleL': return xl(d) - w * 0.11;
-    case 'sidewalkR': return xr(d) + w * 0.27;
-    case 'sidewalkL': return xl(d) - w * 0.27;
+    case 'cycleR': return xr(d) + w * 0.08;
+    case 'cycleL': return xl(d) - w * 0.08;
+    case 'sidewalkR': return xr(d) + w * 0.19;
+    case 'sidewalkL': return xl(d) - w * 0.19;
     case 'center': return (xl(d) + xr(d)) / 2;
     case 'edgeR': return xr(d) - w * 0.06;
     default: return laneX('own', d);
@@ -241,8 +241,8 @@ function surroundings(scene) {
     const hs = [[0, 60, 40], [60, 35, 55], [95, 50, 48], [145, 30, 62], [255, 40, 58], [295, 55, 44], [350, 50, 60]];
     for (const [x, w, h] of hs) parts.push(`<rect x="${x}" y="${HORIZON - h}" width="${w}" height="${h}" fill="${scene.dusk ? '#3A3F48' : '#C9C3B9'}"/>`);
     // fortove
-    parts.push(`<polygon points="0,${H} ${xl(0) - 10},${H} ${xl(0.9) - 2},${yAt(0.9)} 0,${yAt(0.9)}" fill="#B9B5AD"/>`);
-    parts.push(`<polygon points="${W},${H} ${xr(0) + 10},${H} ${xr(0.9) + 2},${yAt(0.9)} ${W},${yAt(0.9)}" fill="#B9B5AD"/>`);
+    parts.push(`<polygon points="0,${H} ${xl(0)},${H} ${xl(0.9)},${yAt(0.9)} 0,${yAt(0.9)}" fill="#B9B5AD"/>`);
+    parts.push(`<polygon points="${W},${H} ${xr(0)},${H} ${xr(0.9)},${yAt(0.9)} ${W},${yAt(0.9)}" fill="#B9B5AD"/>`);
   } else {
     // træer
     for (const [d, side] of [[0.3, -1], [0.55, 1], [0.75, -1], [0.85, 1]]) {
@@ -252,7 +252,8 @@ function surroundings(scene) {
   }
   if (scene.cyclePath) {
     // cykelsti i højre side
-    parts.push(`<polygon points="${xr(0) + 2},${H} ${xr(0) + roadW(0) * 0.2},${H} ${xr(0.95) + roadW(0.95) * 0.2},${yAt(0.95)} ${xr(0.95) + 1},${yAt(0.95)}" fill="#8C6E54"/>`);
+    parts.push(`<polygon points="${xr(0)},${H} ${xr(0) + roadW(0) * 0.15},${H} ${xr(0.95) + roadW(0.95) * 0.15},${yAt(0.95)} ${xr(0.95)},${yAt(0.95)}" fill="#3A3F45"/>`);
+    parts.push(`<line x1="${xr(0) + roadW(0) * 0.15}" y1="${H}" x2="${xr(0.95) + roadW(0.95) * 0.15}" y2="${yAt(0.95)}" stroke="#D8DCE0" stroke-width="2"/>`);
   }
   // vejbanen
   parts.push(`<polygon points="${xl(0)},${H} ${xr(0)},${H} ${xr(1)},${yAt(1)} ${xl(1)},${yAt(1)}" fill="#2A2E33"/>`);
@@ -269,16 +270,17 @@ function mirrors(scene) {
   if (m === 'motorcycle') parts.push(cyclist(200, 29, 0.3, { color: '#111' }));
   // højre sidespejl
   const r = scene.mirrorRight || 'empty';
-  parts.push(`<rect x="${W - 62}" y="${H - 44}" width="56" height="30" rx="6" fill="#1a1d20" stroke="#3b4047" stroke-width="2"/>`);
-  parts.push(`<rect x="${W - 59}" y="${H - 41}" width="50" height="24" rx="4" fill="#9fb4c7"/>`);
-  if (r === 'cyclist') parts.push(cyclist(W - 34, H - 19, 0.34, { color: '#2F7D9A' }));
-  if (r === 'car') parts.push(car(W - 34, H - 19, 0.3, { color: '#7a8891', oncoming: true }));
+  const my = H - 44;
+  parts.push(`<rect x="${W - 62}" y="${my}" width="56" height="30" rx="6" fill="#1a1d20" stroke="#3b4047" stroke-width="2"/>`);
+  parts.push(`<rect x="${W - 59}" y="${my + 3}" width="50" height="24" rx="4" fill="#9fb4c7"/>`);
+  if (r === 'cyclist') parts.push(cyclist(W - 34, my + 27, 0.42, { color: '#1D3A9E' }));
+  if (r === 'car') parts.push(car(W - 34, my + 25, 0.3, { color: '#7a8891', oncoming: true }));
   // venstre sidespejl
   const l = scene.mirrorLeft || 'empty';
-  parts.push(`<rect x="6" y="${H - 44}" width="56" height="30" rx="6" fill="#1a1d20" stroke="#3b4047" stroke-width="2"/>`);
-  parts.push(`<rect x="9" y="${H - 41}" width="50" height="24" rx="4" fill="#9fb4c7"/>`);
-  if (l === 'car') parts.push(car(34, H - 19, 0.3, { color: '#7a8891', oncoming: true }));
-  if (l === 'close') parts.push(car(34, H - 19, 0.44, { color: '#3B4650', oncoming: true }));
+  parts.push(`<rect x="6" y="${my}" width="56" height="30" rx="6" fill="#1a1d20" stroke="#3b4047" stroke-width="2"/>`);
+  parts.push(`<rect x="9" y="${my + 3}" width="50" height="24" rx="4" fill="#9fb4c7"/>`);
+  if (l === 'car') parts.push(car(34, my + 25, 0.3, { color: '#7a8891', oncoming: true }));
+  if (l === 'close') parts.push(car(34, my + 25, 0.44, { color: '#3B4650', oncoming: true }));
   return parts.join('');
 }
 
@@ -286,9 +288,9 @@ function dashboard(scene) {
   const speed = scene.speed ?? 50, limit = scene.limit ?? 50;
   const over = speed > limit;
   return `<g>
-    <path d="M0 ${H} L0 ${H - 34} Q${W / 2} ${H - 52} ${W} ${H - 34} L${W} ${H} Z" fill="#1E2226"/>
-    <text x="${W / 2}" y="${H - 10}" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="700" font-size="24" fill="${over ? '#FF6B5E' : '#F4F6F8'}">${speed}<tspan font-size="11" font-weight="500" fill="#AEB7BF"> km/t</tspan></text>
-    ${scene.blinker ? `<path d="M${scene.blinker === 'left' ? W / 2 - 60 : W / 2 + 60} ${H - 20} ${scene.blinker === 'left' ? 'l-10 6 l10 6' : 'l10 6 l-10 6'} z" fill="#3CB55A"/>` : ''}
+    <path d="M0 ${H} L0 ${H - 48} Q${W / 2} ${H - 62} ${W} ${H - 48} L${W} ${H} Z" fill="#1E2226"/>
+    <text x="${W / 2}" y="${H - 14}" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="700" font-size="24" fill="${over ? '#FF6B5E' : '#F4F6F8'}">${speed}<tspan font-size="11" font-weight="500" fill="#AEB7BF"> km/t</tspan></text>
+    ${scene.blinker ? `<path d="M${scene.blinker === 'left' ? W / 2 - 60 : W / 2 + 60} ${H - 26} ${scene.blinker === 'left' ? 'l-10 6 l10 6' : 'l10 6 l-10 6'} z" fill="#3CB55A"/>` : ''}
   </g>`;
 }
 
@@ -311,7 +313,7 @@ export function renderScene(scene = {}) {
     return fn ? fn(x, y, scaleAt(d) * (o.scale || 1), o) : '';
   }).join('');
   return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(scene.alt || 'Udsyn gennem forruden')}" class="scene-svg">
-    ${surroundings(scene)}${roadLayer(scene)}${markings(scene)}${drawn}${weather(scene)}${mirrors(scene)}${dashboard(scene)}
+    ${surroundings(scene)}${roadLayer(scene)}${markings(scene)}${drawn}${weather(scene)}${dashboard(scene)}${mirrors(scene)}
   </svg>`;
 }
 
