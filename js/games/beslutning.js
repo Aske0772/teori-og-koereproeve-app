@@ -61,7 +61,7 @@ export function runDrive(container, { scenarios, sensor, title = 'Beslutningskø
     const sc = scenarios[idx];
     const cue = sensor.cue(sc.cue);
     shell(`
-      <div class="scene" id="scene"><div class="freeze"></div><div class="caption">${esc(cue)}</div></div>
+      <div class="scene" id="scene"><div class="freeze"></div></div>
       ${sensorLine(cue)}
       <div class="pen" id="pen"><i style="transform:scaleX(0)"></i></div>
       <div class="choices" id="choices" aria-live="off"></div>`, `${idx + 1} af ${scenarios.length}`);

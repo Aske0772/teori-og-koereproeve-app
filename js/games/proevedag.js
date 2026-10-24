@@ -23,7 +23,8 @@ export function mount(container) {
     shell(`<h1>Prøvedagen</h1>
       <p>Hele dagen, fra venteværelset til dommen. Omkring 12 minutter. Sensoren er ${esc(sensor.name)}, ${esc(sensor.style.toLowerCase())} — du finder ud af, at det ikke betyder noget for bedømmelsen.</p>
       ${timeline(-1)}
-      <div class="card"><p class="note">Til den rigtige prøve bruges 15–20 minutter på identitetskontrol, papirer, kontrolprøve og orientering, og selve kørslen varer mindst 25 minutter. Her er alt komprimeret, men rækkefølgen er den samme.</p></div>
+      <div class="card"><p class="note">Til den rigtige prøve bruges 15–20 minutter på identitetskontrol, papirer, kontrolprøve og orientering, og selve kørslen varer mindst 25 minutter. Her er alt komprimeret, men rækkefølgen er den samme.</p>
+      <p class="note">I 2025 blev 67,8 % af de praktiske prøver bestået (Færdselsstyrelsen). Dumper du, koster en ny prøve 1.600 kr. i gebyr plus ventetid og ekstra lektioner.</p></div>
       <div class="btnrow"><button class="btn full" id="go">Mød op</button></div>`);
     container.querySelector('#go').addEventListener('click', waitingRoom);
   }
@@ -53,8 +54,8 @@ export function mount(container) {
       <h2>Papirerne</h2>
       <p>Den prøvesagkyndige tjekker din identitet og dine papirer. Har du det hele?</p>
       <div class="card"><ul class="check-list">
-        <li><input type="checkbox" id="p1"><label for="p1"><div class="lbl">Gyldig legitimation med foto</div><div class="sub">Pas eller anden godkendt legitimation. Uden den afvises prøven.</div></label></li>
-        <li><input type="checkbox" id="p2"><label for="p2"><div class="lbl">Ansøgning om kørekort og lektionsplan</div><div class="sub">Kørelæreren har den typisk med — spørg dagen før.</div></label></li>
+        <li><input type="checkbox" id="p1"><label for="p1"><div class="lbl">Gyldig legitimation</div><div class="sub">Pas, tidligere EU-kørekort eller kørekort-appen — ellers fødsels-/navneattest eller sundhedskort plus billedlegitimation. Mangler det, gennemføres prøven ikke og tæller som ikke bestået.</div></label></li>
+        <li><input type="checkbox" id="p2"><label for="p2"><div class="lbl">Ansøgning om kørekort og underskrevet modulplan</div><div class="sub">Ansøgningen stemplet af Borgerservice og underskrevet af kørelæreren. Spørg kørelæreren dagen før.</div></label></li>
         <li><input type="checkbox" id="p3"><label for="p3"><div class="lbl">Briller eller linser, hvis du bruger dem</div><div class="sub">Står det på ansøgningen, skal de på.</div></label></li>
       </ul></div>
       <div class="btnrow"><button class="btn full" id="go">Ud til bilen</button></div>`, 'Papirerne');

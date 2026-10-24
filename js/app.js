@@ -118,7 +118,8 @@ function settings() {
     </div>
     <div class="section"><h2>Om spillet</h2>
       <p>Spillet træner de beslutninger, sensoren bedømmer til den praktiske køreprøve: orientering, hastighedstilpasning, placering, vigepligt og tegngivning. Bedømmelsen er faste regler, ikke AI.</p>
-      <p>Det erstatter ikke køreskolen. Køretimer, manøvrebane og glatbane er obligatoriske og kan ikke øves på en telefon.</p>
+      <p>Det erstatter ikke køreskolen. Køreuddannelsen har mindst 30 teorilektioner og 24 kørelektioner, heraf 3 på manøvrebane og 4 på køreteknisk anlæg (regler fra 1. juli 2026). Det kan ikke øves på en telefon.</p>
+      <p>I 2025 blev 67,8 % af de praktiske prøver bestået på landsplan — fra 55,7 % i København til 81,4 % i Østjylland (Færdselsstyrelsens prøvestatistik).</p>
       <p class="note">Kilder til indholdet står i <a href="https://github.com/Aske0772/koere-og-teoriproeven/blob/main/docs/RESEARCH.md">docs/RESEARCH.md</a>.</p>
     </div>
   </section>`;

@@ -151,7 +151,7 @@ export const SCENARIOS = [
     scene: { env: 'land', speed: 72, limit: 50, objects: [{ type: 'sign', sign: 'byzone', lane: 'sidewalkR', d: 0.18, approach: 0.1 }] },
     choices: [
       { t: 'Ned på 50 inden skiltet', kind: 'correct', why: 'Byzoneskiltet betyder 50 km/t fra skiltet. Du skal have farten ned, før du passerer det — ikke begynde at bremse der.' },
-      { t: 'Fortsæt i 72 og brems lidt efter skiltet', kind: 'serious', why: 'Over 20 km/t for hurtigt i byzone er en betydelig hastighedsoverskridelse. Det giver ikke bestået med det samme.' },
+      { t: 'Fortsæt i 72 og brems lidt efter skiltet', kind: 'serious', why: '72 i en 50-zone er over 40 % for hurtigt. Retningslinjerne kalder under 10 % en mindre fejl — det her er i den anden ende af skalaen.' },
       { t: 'Ned på 35 for en sikkerheds skyld', kind: 'error', why: 'Unødigt lav hastighed er også en fejl. Du skal køre efter forholdene, og forholdene her siger 50.' },
     ],
     timeout: 'serious',
@@ -201,7 +201,7 @@ export const SCENARIOS = [
     question: 'Lyset skifter til gult.',
     choices: [
       { t: 'Brems roligt og stands ved stoplinjen', kind: 'correct', why: 'Gult betyder stop, medmindre du er så tæt på, at du ikke kan standse forsvarligt. Her har du afstanden til det.' },
-      { t: 'Speed op og nå over', kind: 'critical', why: 'At accelerere mod gult, når du kunne have standset, bedømmes som kørsel mod rødt — en alvorlig fejl.' },
+      { t: 'Speed op og nå over', kind: 'serious', why: 'At accelerere mod gult, når du kunne have standset, er en alvorlig fejl — og bliver meget alvorlig, hvis du rammer rødt i krydset.' },
       { t: 'Brems hårdt i sidste øjeblik', kind: 'error', why: 'Du stoppede, men panikbremsning med bil bagved er en fejl i hastighedstilpasning. Du så lyset for sent.' },
     ],
     timeout: 'serious',

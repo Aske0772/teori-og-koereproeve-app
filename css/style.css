@@ -84,12 +84,12 @@ button { font: inherit; cursor: pointer; }
 .licence .title { font-size: 13px; color: #6B3A38; }
 .licence .cat { font-family: var(--f-display); font-size: 40px; font-weight: 700; line-height: 1; }
 .licence .name { font-family: var(--f-display); font-size: 24px; font-weight: 600; }
-.licence .stamps { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 8px; }
+.licence .stamps { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin-top: 8px; }
 .stamp {
   aspect-ratio: 1; border-radius: 50%;
   border: 2px dashed rgba(59,30,29,.35);
   display: grid; place-items: center;
-  font-family: var(--f-display); font-weight: 700; font-size: 12px; color: rgba(59,30,29,.55);
+  font-family: var(--f-display); font-weight: 700; font-size: 10px; color: rgba(59,30,29,.55);
   text-align: center; line-height: 1; padding: 2px;
 }
 .stamp.done {
