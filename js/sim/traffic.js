@@ -131,6 +131,7 @@ export function createTraffic(net, opts = {}) {
       const d = zz.s - o.s;
       if (d < -3 || d > 75) continue;
       if (Math.abs(d) < 2.6) return false;
+      if (d > 0 && d < 9 && o.v > 0.3) return false;
       if (o.v > 1.2 && d > 0 && d / o.v < 4.5) return false;
     }
     return true;
@@ -320,7 +321,7 @@ export function createTraffic(net, opts = {}) {
       }
       for (const z of lane.zebras) {
         const dz = z.s - c.s;
-        if (dz > 3.0 && dz < 40 && zebraBusy(z.zebra)) obstacle(dz - 4.0, 0);
+        if (dz > 2.8 && dz < 40 && zebraBusy(z.zebra)) obstacle(dz - 4.0, 0);
       }
     }
 

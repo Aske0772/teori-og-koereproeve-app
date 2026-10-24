@@ -1,6 +1,6 @@
 # Bykørsel: plan og status
 
-**Status 24. oktober 2026: bygget og udgivet.** Testet med en autopilot, der kører efter reglerne: 15 forskellige trafikscenarier gennem hele prøveruten gav 100 point uden fejl (ingen falske fejl fra sensoren). Med autopiloten sat til at springe spejle, blink eller regler over finder sensoren fejlene. Trafikken alene kørte 15 simulerede minutter uden en eneste kørsel over for rødt, rullende stop eller kørsel gennem fodgængerfelt med en fodgænger i.
+**Status 24. oktober 2026: bygget og udgivet.** Testet med en autopilot, der kører efter reglerne, gennem hele prøveruten i 15 forskellige trafikscenarier: alle 15 bestået, 13 helt uden noter, to med én note hver (én "alt for tæt på en cyklist", én "unødig venten"). Begge kan være rimelige, men er ikke efterprøvet af en kørelærer. Med autopiloten sat til at springe spejle, blink eller regler over finder sensoren fejlene. Trafikken alene kørte 15 simulerede minutter uden en eneste kørsel over for rødt, rullende stop eller kørsel gennem fodgængerfelt med en fodgænger i.
 
 ## Hvorfor den nuværende tur ikke rækker
 Byturen er en pseudo-3D-"racerbane": én lang vej, hvor kryds og sving er tegnet ind som kurver. Du kan ikke dreje ind ad en sidevej, ingen andre trafikanter følger reglerne, og vigepligt bliver bedømt ud fra et manuskript. Det er en film med rat, ikke en by.

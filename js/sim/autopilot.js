@@ -101,7 +101,7 @@ export function createAutopilot(sim, opts = {}) {
       }
       for (const z of lane.zebras) {
         const dz = z.s - loc.s;
-        if (dz > 3.0 && dz < 40 && z.zebra.peds.some(q => q.state === 'wait' || q.state === 'cross')) vT = Math.min(vT, Math.max(0, (dz - 4) * 0.4));
+        if (dz > 2.8 && dz < 40 && z.zebra.peds.some(q => q.state === 'wait' || q.state === 'cross')) vT = Math.min(vT, Math.max(0, (dz - 4) * 0.4));
       }
       if (sim.ex.E.pull) {
         if (say('p1')) { look('rear'); blink('right'); }
