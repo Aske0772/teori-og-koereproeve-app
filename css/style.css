@@ -144,7 +144,7 @@ body.playing { padding-bottom: 0; }
 .drive-sensor { font-family: var(--f-display); font-size: 13px; color: var(--text-2); }
 .drive-limit { width: 44px; height: 44px; border-radius: 50%; background: #f4f6f8; border: 5px solid #c8322b; display: grid; place-items: center; font-family: var(--f-display); font-weight: 700; font-size: 15px; color: #16181b; }
 .stage { position: relative; background: var(--bg-2); aspect-ratio: 4 / 5; overflow: hidden; user-select: none; }
-.stage canvas#road { width: 100%; height: 100%; display: block; }
+.stage canvas#road { width: 100%; height: 100%; display: block; object-fit: cover; object-position: 50% 100%; }
 .mirror-hit { position: absolute; background: transparent; border: 0; border-radius: 10px; }
 .mirror-hit.rear { left: 50%; top: 0; width: 38%; height: 12%; transform: translateX(-50%); }
 .mirror-hit.left { left: 0; bottom: 4%; width: 22%; height: 13%; }
@@ -303,8 +303,12 @@ input[type=text], select { width: 100%; font: inherit; color: var(--text); paddi
 select { width: auto; }
 
 @media (min-width: 700px) {
-  .hero, .drive, .scene, .cockpit, .hazard-stage { margin: 0; border-radius: 18px; overflow: hidden; }
+  .drive, .scene, .cockpit, .hazard-stage { margin: 0; border-radius: 18px; overflow: hidden; }
   .drive { min-height: auto; margin-top: var(--s3); }
+  .hero { margin: 0 calc(50% - 50vw); aspect-ratio: auto; height: 82dvh; max-height: none; }
+  .hero-copy { left: max(var(--s4), calc(50vw - 280px)); right: auto; width: min(560px, 90vw); bottom: var(--s7); }
+  .hero-copy h1 { font-size: clamp(56px, 7vw, 96px); }
+  .stage { aspect-ratio: 4 / 3; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }

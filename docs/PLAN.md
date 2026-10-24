@@ -29,7 +29,8 @@ Det, han *ikke* har brug for, og som vi fravalgte: endnu en teoriquiz, en kørse
 
 | Modul | Færdigt | Mangler |
 |---|---|---|
-| Beslutningskørsel | 26 beslutningspunkter i 4 bedømmelsesområder, frys, 2,2 s, feedback, dom, replay | Flere scenarier (mål: 80+), motorvej, mørke, bakning/manøvrer |
+| Byturen (kørespillet) | Pseudo-3D-motor i canvas, rat/gas/brems/blink, spejle og skulderblik som tryk, 12 bedømte situationer på 3,2 km, live-notater, bedømmelsesskema | Flere ruter (landevej/motorvej, mørke, regn), bakkemanøvrer og parkering, lyd (motor, blinkrelæ), bedre køretøjssprites, haptik |
+| Hurtige beslutninger | 26 frysebilleder i 4 bedømmelsesområder, 2,2 s, feedback, replay | Flere scenarier |
 | Skulderblik-rytme | 8 manøvrer, 12 runder, stigende tempo | Variation i rutinen (fx dobbelt spejlcheck før hårdt stop) |
 | Fareopfattelse | 10 klip, DVSA-scoring, mønster-detektion, frysebillede ved farens start | Rigtige dashcam-klip (eget optaget, slørede plader), flere "ingen fare"-klip |
 | Kontrolspørgsmål | 35 kontrolnumre i 6 afsnit + spejle, opgavekort-træk, vægtet gentagelse | Billeder af motorrum/dæk; gennemgang af kørelærer |
@@ -40,7 +41,9 @@ Det, han *ikke* har brug for, og som vi fravalgte: endnu en teoriquiz, en kørse
 | Kørekort + klar-måler | 8 stempler ved 80 point, måler vægtet mod svageste disciplin | Deling, hold-ranglister |
 | Sensorer | 3 personligheder, stemme via Web Speech | Rigtige indtalte stemmer |
 
-Teknik: ren HTML/CSS/JS-moduler, ingen build, ingen backend, alt i `localStorage`. SVG-renderer tegner forrude-scener fra data (vej, kryds, rundkørsel, fodgængerfelt, biler, cyklister, fodgængere, skilte, lyssignaler, spejle, speedometer). Nye scenarier er data, ikke kode.
+Teknik: ren HTML/CSS/JS-moduler, ingen build, ingen backend, alt i `localStorage`. Kørespillet er en canvas-renderer i stil med klassiske pseudo-3D-racere (projicerede vejsegmenter, kurver som akkumuleret sideforskydning, sprites sorteret efter dybde) med en separat spilmotor, der kører fysik, aktører og sensorens regler. Ruter og situationer er data (`routes.js`); bedømmelsen af hver situationstype står ét sted (`game.js`).
+
+Status 24/10 aften: hele spillet blev bygget om fra frysebilleder til et rigtigt kørespil efter første test ("virkelig dårlig UI, skal være et ægte spil man kører rundt i"). UI'et er samtidig lagt om til mørk kabine, én accentfarve og to skrifter.
 
 ## 4. Næste skridt, i rækkefølge
 
