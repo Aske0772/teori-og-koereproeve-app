@@ -49,7 +49,7 @@ export function runDrive(container, { scenarios, sensor, title = 'Beslutningskø
     shell(`
       ${sensorLine(sensor.intro)}
       <div class="card"><p>Bilen kører selv. Når billedet fryser, har du <b>${(THINK_MS / 1000).toFixed(1).replace('.', ',')} sekunder</b> til at vælge, hvad du gør. Vælger du ikke, tæller det som tøven.</p>
-      <p class="note">Fejl bedømmes i fire niveauer som til prøven: mindre fejl, fejl, alvorlig og meget alvorlig. Én meget alvorlig fejl er nok til ikke bestået. Men du kører turen færdig — det gør man også i virkeligheden.</p></div>
+      <p class="note">Fejl bedømmes i fire niveauer som til prøven: mindre fejl, fejl, alvorlig og meget alvorlig. Én meget alvorlig fejl er nok til ikke bestået. Men du kører turen færdig, det gør man også i virkeligheden.</p></div>
       <div class="btnrow"><button class="btn full" id="start">Kør</button></div>`, `${scenarios.length} beslutninger`);
     speak(sensor.intro);
     container.querySelector('#start').addEventListener('click', () => next());
@@ -115,7 +115,7 @@ export function runDrive(container, { scenarios, sensor, title = 'Beslutningskø
         answered = true;
         cancelAnimationFrame(raf);
         const kind = choice ? choice.kind : (sc.timeout || 'minor');
-        const why = choice ? choice.why : (sc.timeoutWhy || 'Du tøvede. Til prøven skal beslutningen komme i tide — tøven er også en fejl, fordi trafikken bag dig ikke ved, hvad du vil.');
+        const why = choice ? choice.why : (sc.timeoutWhy || 'Du tøvede. Til prøven skal beslutningen komme i tide, tøven er også en fejl, fordi trafikken bag dig ikke ved, hvad du vil.');
         results.push({ id: sc.id, criterion: sc.criterion, kind, ms: Math.round(ms), chosen: choice?.t || 'Ingen beslutning', why, cue: sc.cue, correct: sc.choices.find(c => c.kind === 'correct')?.t });
         box.querySelectorAll('.choice').forEach((b, i) => {
           const k = all[i].kind;
@@ -170,10 +170,10 @@ export function runDrive(container, { scenarios, sensor, title = 'Beslutningskø
           <tr><th>Bedømmelsesområde</th><th>Fejl</th></tr>
           ${Object.entries(r.perCrit).map(([c, v]) => { const parts = []; if (v.critical) parts.push(`${v.critical} meget alvorlig`); if (v.serious) parts.push(`${v.serious} alvorlig`); if (v.error) parts.push(`${v.error} fejl`); if (v.minor) parts.push(`${v.minor} mindre`); return `<tr><td>${esc(CRITERIA[c])}</td><td class="mark ${v.critical || v.serious ? 'bad' : parts.length ? '' : 'ok'}">${parts.join(', ') || 'ingen'}</td></tr>`; }).join('')}
         </table>
-        <p class="note" style="margin:10px 0 0">${r.reason ? esc(r.reason) + ' ' : ''}Gennemsnitlig betænkningstid ${(r.avgMs / 1000).toFixed(1).replace('.', ',')} s. Til den rigtige prøve er dommen et skøn ud fra de samme fire niveauer — her er den en fast regel.</p>
+        <p class="note" style="margin:10px 0 0">${r.reason ? esc(r.reason) + ' ' : ''}Gennemsnitlig betænkningstid ${(r.avgMs / 1000).toFixed(1).replace('.', ',')} s. Til den rigtige prøve er dommen et skøn ud fra de samme fire niveauer, her er den en fast regel.</p>
       </div>
       ${sensorLine(text)}
-      ${bad.length ? `<h2 style="margin-top:18px">Replay</h2><ul class="replay-list">${bad.map(b => `<li><div class="q">${esc(b.cue)}</div><div class="you">Du: ${esc(b.chosen)} · ${esc(LEVELS[b.kind] || '')}</div><div class="why">${esc(b.why)}</div>${b.correct ? `<div class="why"><b>Det rigtige:</b> ${esc(b.correct)}</div>` : ''}</li>`).join('')}</ul>` : '<p class="card" style="margin-top:14px">Ingen fejl. Kør den igen — en anden sensor, andre situationer.</p>'}
+      ${bad.length ? `<h2 style="margin-top:18px">Replay</h2><ul class="replay-list">${bad.map(b => `<li><div class="q">${esc(b.cue)}</div><div class="you">Du: ${esc(b.chosen)} · ${esc(LEVELS[b.kind] || '')}</div><div class="why">${esc(b.why)}</div>${b.correct ? `<div class="why"><b>Det rigtige:</b> ${esc(b.correct)}</div>` : ''}</li>`).join('')}</ul>` : '<p class="card" style="margin-top:14px">Ingen fejl. Kør den igen, en anden sensor, andre situationer.</p>'}
       <div class="btnrow"><button class="btn full" onclick="location.hash='${back}'">Færdig</button><button class="btn ghost full" id="again">Kør igen</button></div>`, 'Dom');
     speak(text);
     container.querySelector('#again').addEventListener('click', () => { idx = 0; results.length = 0; scenarios.splice(0, scenarios.length, ...pickScenarios(scenarios.length)); next(); });

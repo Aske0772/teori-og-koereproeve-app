@@ -16,7 +16,7 @@ export const HAZARDS = [
       { type: 'person', props: { child: true }, keys: [{ t: 0, d: 0.9, lane: 'sidewalkR' }, { t: 3200, d: 0.9, lane: 'sidewalkR' }, { t: 4600, d: 0.6, lane: 'edgeR' }, { t: 8000, d: 0.05, lane: 'own' }] },
     ],
     hazard: { start: 2700, end: 6200 },
-    explain: 'Bolden er faren — ikke barnet. En bold på vejen betyder, at et barn følger efter. Den, der ser bolden, har to sekunder mere.',
+    explain: 'Bolden er faren, ikke barnet. En bold på vejen betyder, at et barn følger efter. Den, der ser bolden, har to sekunder mere.',
   },
   {
     id: 'bil-fra-sidevej',
@@ -27,7 +27,7 @@ export const HAZARDS = [
       { type: 'car', props: { color: '#B33B3B', scale: 0.9 }, keys: [{ t: 0, x: 395, d: 0.6 }, { t: 2500, x: 395, d: 0.6 }, { t: 2600, x: 360, d: 0.58 }, { t: 4800, x: 250, d: 0.5 }, { t: 8000, x: 250, d: 0.12 }] },
     ],
     hazard: { start: 2500, end: 5600 },
-    explain: 'Bilen fra sidevejen begynder at trille frem uden at se dig. Den udvikler sig til en fare, så snart den ruller — ikke først når den er ude.',
+    explain: 'Bilen fra sidevejen begynder at trille frem uden at se dig. Den udvikler sig til en fare, så snart den ruller, ikke først når den er ude.',
   },
   {
     id: 'bildoer-aabner',
@@ -40,7 +40,7 @@ export const HAZARDS = [
       { type: 'person', keys: [{ t: 0, d: 0.3, lane: 'sidewalkL' }, { t: 8000, d: 0.9, lane: 'sidewalkL' }] },
     ],
     hazard: { start: 3000, end: 6400 },
-    explain: 'Døren åbnes. Fodgængeren i venstre side er en distraktion — hun går væk fra vejen og er ingen fare.',
+    explain: 'Døren åbnes. Fodgængeren i venstre side er en distraktion, hun går væk fra vejen og er ingen fare.',
   },
   {
     id: 'modkoerende-overhaler',
@@ -52,7 +52,7 @@ export const HAZARDS = [
       { type: 'car', props: { color: '#2F7D9A', oncoming: true }, keys: [{ t: 0, d: 0.95, lane: 'oncoming' }, { t: 2200, d: 0.75, lane: 'oncoming' }, { t: 3200, d: 0.68, lane: 'center' }, { t: 4600, d: 0.5, lane: 'own' }, { t: 6000, d: 0.3, lane: 'center' }, { t: 8000, d: 0.0, lane: 'oncoming' }] },
     ],
     hazard: { start: 2200, end: 5200 },
-    explain: 'Bilen bag bussen trækker ud for at overhale — mod dig. Du skal se den, når den begynder at rykke mod midten, og have foden klar på bremsen.',
+    explain: 'Bilen bag bussen trækker ud for at overhale, mod dig. Du skal se den, når den begynder at rykke mod midten, og have foden klar på bremsen.',
   },
   {
     id: 'fodgaenger-ved-felt',
@@ -64,7 +64,7 @@ export const HAZARDS = [
       { type: 'person', props: { color: '#7A4F9E' }, keys: [{ t: 0, d: 0.62, lane: 'sidewalkL' }, { t: 2800, d: 0.62, lane: 'sidewalkL' }, { t: 5500, d: 0.62, lane: 'oncoming' }, { t: 8000, d: 0.62, lane: 'center' }] },
     ],
     hazard: { start: 2800, end: 5800 },
-    explain: 'Fodgængeren vender sig mod feltet og træder ud. Den tidlige fare er bevægelsen mod kanten — ikke det første skridt ud på vejen.',
+    explain: 'Fodgængeren vender sig mod feltet og træder ud. Den tidlige fare er bevægelsen mod kanten, ikke det første skridt ud på vejen.',
   },
   {
     id: 'bus-ud-fra-stoppested',
@@ -76,7 +76,7 @@ export const HAZARDS = [
       { type: 'bus', keys: [{ t: 0, d: 0.68, lane: 'edgeR' }, { t: 2400, d: 0.68, lane: 'edgeR' }, { t: 2401, d: 0.68, lane: 'edgeR', blinker: 'left' }, { t: 5000, d: 0.6, lane: 'own' }, { t: 8000, d: 0.5, lane: 'own' }] },
     ],
     hazard: { start: 2400, end: 5400 },
-    explain: 'Blinklyset på bussen er signalet. I byzone skal du lade den køre ud — og den gør det, uanset om du har set den.',
+    explain: 'Blinklyset på bussen er signalet. I byzone skal du lade den køre ud, og den gør det, uanset om du har set den.',
   },
   {
     id: 'bil-foran-bremser',
@@ -100,7 +100,7 @@ export const HAZARDS = [
       { type: 'car', props: { color: '#C9C3B9' }, keys: [{ t: 0, d: 0.46, lane: 'cycleR' }, { t: 8000, d: 0.46, lane: 'cycleR' }] },
     ],
     hazard: { start: 2600, end: 5600 },
-    explain: 'En bil holder på cykelstien. Cyklisten må ud på kørebanen for at komme forbi — det kan du se, længe før cyklisten gør det.',
+    explain: 'En bil holder på cykelstien. Cyklisten må ud på kørebanen for at komme forbi, det kan du se, længe før cyklisten gør det.',
   },
   {
     id: 'skolebørn',
@@ -125,6 +125,6 @@ export const HAZARDS = [
       { type: 'car', props: { color: '#D9D5CC', oncoming: true }, keys: [{ t: 0, d: 0.95, lane: 'oncoming' }, { t: 7000, d: 0.0, lane: 'oncoming' }] },
     ],
     hazard: null,
-    explain: 'Ingen udviklende fare. Bilen foran holder farten, den modkørende bliver i sin bane. Tryk uden grund koster ikke point her — men det afslører, om du gætter.',
+    explain: 'Ingen udviklende fare. Bilen foran holder farten, den modkørende bliver i sin bane. Tryk uden grund koster ikke point her, men det afslører, om du gætter.',
   },
 ];

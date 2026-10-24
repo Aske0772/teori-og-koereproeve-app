@@ -1,7 +1,7 @@
 // Beslutningspunkter til beslutningskørslen.
 // kind følger Færdselsstyrelsens fire fejlniveauer:
 // 'minor' = mindre fejl, 'error' = fejl, 'serious' = alvorlig fejl, 'critical' = meget alvorlig fejl (kan alene give ikke bestået).
-// Reglerne er faste og skrevet efter færdselslovens krav og Færdselsstyrelsens bedømmelsesområder — ingen AI.
+// Reglerne er faste og skrevet efter færdselslovens krav og Færdselsstyrelsens bedømmelsesområder, ingen AI.
 
 export const CRITERIA = {
   orientering: 'Orientering',
@@ -44,7 +44,7 @@ export const SCENARIOS = [
     scene: { env: 'by', cyclePath: true, junction: { d: 0.3, side: 'right' }, speed: 22, limit: 50, blinker: 'right', mirrorRight: 'cyclist', mirrorRear: 'car', objects: [{ type: 'cyclist', lane: 'cycleR', d: 0.3, approach: 0.04 }, { type: 'sign', sign: 'cykelsti', lane: 'sidewalkR', d: 0.5 }] },
     choices: [
       { t: 'Hold tilbage, lad cyklisten passere', kind: 'correct', why: 'Når du drejer til højre, har du vigepligt for cyklister på cykelstien, der kører ligeud. Cyklisten i sidespejlet er på vej forbi dig.' },
-      { t: 'Drej nu, du er foran', kind: 'critical', why: 'Du klemmer cyklisten. Manglende vigepligt for cyklister ved højresving er en af de klassiske grunde til ikke bestået — og en af de hyppigste alvorlige ulykker i byerne.' },
+      { t: 'Drej nu, du er foran', kind: 'critical', why: 'Du klemmer cyklisten. Manglende vigepligt for cyklister ved højresving er en af de klassiske grunde til ikke bestået, og en af de hyppigste alvorlige ulykker i byerne.' },
       { t: 'Stop midt i svinget', kind: 'error', why: 'Du skal holde tilbage inden svinget, ikke stoppe halvvejs inde på cykelstien, hvor du spærrer for den.' },
     ],
     timeout: 'critical',
@@ -58,7 +58,7 @@ export const SCENARIOS = [
     scene: { env: 'by', junction: { d: 0.22, sharkTeeth: true }, speed: 18, limit: 50, objects: [{ type: 'sign', sign: 'vigepligt', lane: 'sidewalkR', d: 0.28, approach: 0.05 }, { type: 'car', x: 80, d: 0.32, approach: 0.0, color: '#7A8891', scale: 0.9 }] },
     choices: [
       { t: 'Hold tilbage ved hajtænderne', kind: 'correct', why: 'Hajtænder betyder ubetinget vigepligt: al trafik på den krydsende vej har forkørselsret, også bilen fra venstre.' },
-      { t: 'Kør, bilen fra venstre skal vige', kind: 'critical', why: 'Hajtænder gælder begge veje. Ubetinget vigepligt betyder, at du venter på alle — uanset hvilken side de kommer fra.' },
+      { t: 'Kør, bilen fra venstre skal vige', kind: 'critical', why: 'Hajtænder gælder begge veje. Ubetinget vigepligt betyder, at du venter på alle, uanset hvilken side de kommer fra.' },
       { t: 'Rul langsomt frem og se an', kind: 'minor', why: 'Du må gerne trille frem for at få udsyn, men ikke så langt, at du er ude i krydset, før du har set, om der er fri bane.' },
     ],
     timeout: 'critical',
@@ -72,7 +72,7 @@ export const SCENARIOS = [
     choices: [
       { t: 'Sæt farten ned og hold tilbage for bilen fra højre', kind: 'correct', why: 'Ingen skilte, ingen hajtænder: så gælder højrevigepligten. Bilen fra højre skal frem først.' },
       { t: 'Fortsæt, du er på den største vej', kind: 'critical', why: 'Vejens størrelse betyder ingenting. Uden afmærkning har trafik fra højre forkørselsret.' },
-      { t: 'Blink til ham, så han kører', kind: 'error', why: 'Du må ikke give andre tegn til at køre — du kan ikke se, hvad de ikke kan se. Hold bare tilbage.' },
+      { t: 'Blink til ham, så han kører', kind: 'error', why: 'Du må ikke give andre tegn til at køre, du kan ikke se, hvad de ikke kan se. Hold bare tilbage.' },
     ],
     timeout: 'critical',
     rule: 'Færdselsloven § 26, stk. 4',
@@ -83,7 +83,7 @@ export const SCENARIOS = [
     cue: 'Drej til venstre ved stopskiltet',
     scene: { env: 'land', junction: { d: 0.2, stopLine: true }, speed: 12, limit: 80, blinker: 'left', objects: [{ type: 'sign', sign: 'stop', lane: 'sidewalkR', d: 0.24, approach: 0.05 }] },
     choices: [
-      { t: 'Stands helt ved stoplinjen, orientér dig, kør', kind: 'correct', why: 'Stop betyder fuldt stop — bilen skal stå stille ved stoplinjen, også når der er frit. Først derefter orientering og kørsel.' },
+      { t: 'Stands helt ved stoplinjen, orientér dig, kør', kind: 'correct', why: 'Stop betyder fuldt stop, bilen skal stå stille ved stoplinjen, også når der er frit. Først derefter orientering og kørsel.' },
       { t: 'Der er frit, rul igennem i 10 km/t', kind: 'serious', why: 'Et "rullende stop" er ikke et stop. Det bedømmes som manglende overholdelse af vigepligten og giver ikke bestået.' },
       { t: 'Stands 5 meter før linjen', kind: 'minor', why: 'Du skal standse ved stoplinjen, hvor du har udsyn. For tidligt stop giver dårligt overblik og ekstra start.' },
     ],
@@ -98,7 +98,7 @@ export const SCENARIOS = [
     choices: [
       { t: 'Hold tilbage for bilen i rundkørslen', kind: 'correct', why: 'Du har ubetinget vigepligt for al trafik, der allerede kører i rundkørslen. Den kommer fra venstre.' },
       { t: 'Kør ind, der er plads foran ham', kind: 'critical', why: 'Hvis bilen i rundkørslen skal bremse for dig, har du ikke overholdt vigepligten. Tvivl = vent.' },
-      { t: 'Stop helt op og vent på tom rundkørsel', kind: 'error', why: 'Du skal ikke vente på, at der er helt tomt — kun på et hul, du kan køre ind i uden at genere. Unødig venten er også en fejl.' },
+      { t: 'Stop helt op og vent på tom rundkørsel', kind: 'error', why: 'Du skal ikke vente på, at der er helt tomt, kun på et hul, du kan køre ind i uden at genere. Unødig venten er også en fejl.' },
     ],
     timeout: 'critical',
   },
@@ -123,7 +123,7 @@ export const SCENARIOS = [
     question: 'Bussen blinker ud fra stoppestedet.',
     choices: [
       { t: 'Sæt farten ned og lad bussen køre ud', kind: 'correct', why: 'I byzone skal du give en bus, der blinker ud fra et stoppested, mulighed for at køre ud. Den har ikke pligt til at vente på dig.' },
-      { t: 'Fortsæt — du er der først', kind: 'serious', why: 'I tættere bebygget område er det dig, der holder tilbage for bussen. Det er en vigepligtsregel, ikke en høflighed.' },
+      { t: 'Fortsæt, du er der først', kind: 'serious', why: 'I tættere bebygget område er det dig, der holder tilbage for bussen. Det er en vigepligtsregel, ikke en høflighed.' },
       { t: 'Træk helt over i modsatte bane og passér', kind: 'error', why: 'Du kom forbi, men ved at bruge modsatte vejbane uden grund. Det bedømmes som dårlig placering, og der kunne komme modkørende.' },
     ],
     timeout: 'error',
@@ -136,7 +136,7 @@ export const SCENARIOS = [
     scene: { env: 'by', junction: { d: 0.22 }, speed: 14, limit: 50, blinker: 'left', objects: [{ type: 'car', lane: 'oncoming', d: 0.5, approach: 0.25, oncoming: true, color: '#D9D5CC' }] },
     choices: [
       { t: 'Vent i krydset til den modkørende er forbi', kind: 'correct', why: 'Ved venstresving har du vigepligt for modkørende, der kører ligeud eller til højre. Placér dig til venstre i din bane, blink, og vent.' },
-      { t: 'Du kan nå det — drej nu', kind: 'critical', why: 'Hvis den modkørende skal bremse, var det for sent. Venstresving foran modkørende er en typisk alvorlig fejl.' },
+      { t: 'Du kan nå det, drej nu', kind: 'critical', why: 'Hvis den modkørende skal bremse, var det for sent. Venstresving foran modkørende er en typisk alvorlig fejl.' },
       { t: 'Vent, men bliv stående helt til højre i din bane', kind: 'error', why: 'Du ventede rigtigt, men placeringen er forkert: trafikken bag dig kan ikke komme forbi, og det er uklart, at du vil til venstre.' },
     ],
     timeout: 'critical',
@@ -150,8 +150,8 @@ export const SCENARIOS = [
     cue: 'Fortsæt ligeud ind i byen',
     scene: { env: 'land', speed: 72, limit: 50, objects: [{ type: 'sign', sign: 'byzone', lane: 'sidewalkR', d: 0.18, approach: 0.1 }] },
     choices: [
-      { t: 'Ned på 50 inden skiltet', kind: 'correct', why: 'Byzoneskiltet betyder 50 km/t fra skiltet. Du skal have farten ned, før du passerer det — ikke begynde at bremse der.' },
-      { t: 'Fortsæt i 72 og brems lidt efter skiltet', kind: 'serious', why: '72 i en 50-zone er over 40 % for hurtigt. Retningslinjerne kalder under 10 % en mindre fejl — det her er i den anden ende af skalaen.' },
+      { t: 'Ned på 50 inden skiltet', kind: 'correct', why: 'Byzoneskiltet betyder 50 km/t fra skiltet. Du skal have farten ned, før du passerer det, ikke begynde at bremse der.' },
+      { t: 'Fortsæt i 72 og brems lidt efter skiltet', kind: 'serious', why: '72 i en 50-zone er over 40 % for hurtigt. Retningslinjerne kalder under 10 % en mindre fejl, det her er i den anden ende af skalaen.' },
       { t: 'Ned på 35 for en sikkerheds skyld', kind: 'error', why: 'Unødigt lav hastighed er også en fejl. Du skal køre efter forholdene, og forholdene her siger 50.' },
     ],
     timeout: 'serious',
@@ -164,7 +164,7 @@ export const SCENARIOS = [
     choices: [
       { t: 'Øg til 80, vejen og udsynet tillader det', kind: 'correct', why: 'Uden for byzone er grænsen 80 km/t på almindelig vej. Sensoren forventer, at du følger med, når forholdene tillader det.' },
       { t: 'Bliv på 50, det er sikrest', kind: 'error', why: 'Unødigt lav hastighed bedømmes som manglende hastighedstilpasning. Det skaber kø og farlige overhalinger.' },
-      { t: 'Op på 95 — der er ingen', kind: 'serious', why: 'Grænsen er 80. Mere end 15 km/t over bedømmes som en alvorlig fejl, uanset hvor tomt der er.' },
+      { t: 'Op på 95, der er ingen', kind: 'serious', why: 'Grænsen er 80. Mere end 15 km/t over bedømmes som en alvorlig fejl, uanset hvor tomt der er.' },
     ],
     timeout: 'minor',
   },
@@ -174,7 +174,7 @@ export const SCENARIOS = [
     cue: 'Fortsæt ligeud',
     scene: { env: 'by', speed: 48, limit: 50, objects: [{ type: 'sign', sign: 'skole', lane: 'sidewalkR', d: 0.3, approach: 0.1 }, { type: 'person', child: true, lane: 'sidewalkR', d: 0.42, approach: 0.1 }, { type: 'person', child: true, lane: 'sidewalkR', d: 0.5, approach: 0.1, color: '#2F7D9A' }] },
     choices: [
-      { t: 'Ned i fart, foden over bremsen', kind: 'correct', why: 'Børn ved vejen er en risiko, du skal tilpasse farten efter — også selvom grænsen er 50. "Efter forholdene" vejer tungere end skiltet.' },
+      { t: 'Ned i fart, foden over bremsen', kind: 'correct', why: 'Børn ved vejen er en risiko, du skal tilpasse farten efter, også selvom grænsen er 50. "Efter forholdene" vejer tungere end skiltet.' },
       { t: 'Hold 48, du er under grænsen', kind: 'serious', why: 'Hastighedsgrænsen er et loft, ikke et mål. Med børn tæt på kørebanen er 48 for meget, og det bedømmes som manglende tilpasning.' },
       { t: 'Dyt, så de ved, du kommer', kind: 'error', why: 'Hornet bruges kun for at afværge fare. Her skal du bare ned i fart.' },
     ],
@@ -189,7 +189,7 @@ export const SCENARIOS = [
     choices: [
       { t: 'Slip speederen, øg afstanden', kind: 'correct', why: 'Våd vej: længere bremselængde. Afstanden til forankørende skal øges, så du kan standse uden at bremse hårdt.' },
       { t: 'Hold afstanden, du er under 80', kind: 'error', why: 'Lovlig fart er ikke det samme som tilpasset fart. I regn skal afstanden op, og sensoren noterer det.' },
-      { t: 'Træk ud og overhal', kind: 'serious', why: 'Overhaling i regn, lige efter at forankørende bremser, uden at vide hvorfor — det er at køre ind i noget, du ikke kan se.' },
+      { t: 'Træk ud og overhal', kind: 'serious', why: 'Overhaling i regn, lige efter at forankørende bremser, uden at vide hvorfor, det er at køre ind i noget, du ikke kan se.' },
     ],
     timeout: 'minor',
   },
@@ -201,7 +201,7 @@ export const SCENARIOS = [
     question: 'Lyset skifter til gult.',
     choices: [
       { t: 'Brems roligt og stands ved stoplinjen', kind: 'correct', why: 'Gult betyder stop, medmindre du er så tæt på, at du ikke kan standse forsvarligt. Her har du afstanden til det.' },
-      { t: 'Speed op og nå over', kind: 'serious', why: 'At accelerere mod gult, når du kunne have standset, er en alvorlig fejl — og bliver meget alvorlig, hvis du rammer rødt i krydset.' },
+      { t: 'Speed op og nå over', kind: 'serious', why: 'At accelerere mod gult, når du kunne have standset, er en alvorlig fejl, og bliver meget alvorlig, hvis du rammer rødt i krydset.' },
       { t: 'Brems hårdt i sidste øjeblik', kind: 'error', why: 'Du stoppede, men panikbremsning med bil bagved er en fejl i hastighedstilpasning. Du så lyset for sent.' },
     ],
     timeout: 'serious',
@@ -213,7 +213,7 @@ export const SCENARIOS = [
     scene: { env: 'by', roundabout: { d: 0.2 }, speed: 44, limit: 50, blinker: 'right', objects: [{ type: 'sign', sign: 'rundkoersel', lane: 'sidewalkR', d: 0.3, approach: 0.05 }] },
     choices: [
       { t: 'Ned til omkring 20–25 inden rundkørslen', kind: 'correct', why: 'Rundkørslen er tom, men svinget er skarpt, og udsynet til venstre er kort. Du skal kunne standse for noget, du først ser sent.' },
-      { t: 'Hold 44 — der er ingen', kind: 'serious', why: 'Du kan ikke overholde en vigepligt i 44 km/t. Sensoren bedømmer det som manglende hastighedstilpasning før vigepligt.' },
+      { t: 'Hold 44, der er ingen', kind: 'serious', why: 'Du kan ikke overholde en vigepligt i 44 km/t. Sensoren bedømmer det som manglende hastighedstilpasning før vigepligt.' },
       { t: 'Ned til 8 og kryb igennem', kind: 'error', why: 'Unødigt langsomt. Rundkørslen er tom, og du blokerer for trafikken bag dig.' },
     ],
     timeout: 'error',
@@ -226,7 +226,7 @@ export const SCENARIOS = [
     cue: 'Skift til venstre vognbane, du skal til venstre forude',
     scene: { env: 'by', speed: 45, limit: 50, mirrorLeft: 'close', mirrorRear: 'car', centerLine: 'dashed', objects: [{ type: 'car', lane: 'own', d: 0.55, approach: 0.1 }] },
     choices: [
-      { t: 'Spejle, skulderblik, vent — bilen i venstre spejl er for tæt', kind: 'correct', why: 'Rutinen er spejl, spejl, skulderblik, blink, og først derefter skiftet. Og hvis skulderblikket viser en bil, venter du.' },
+      { t: 'Spejle, skulderblik, vent, bilen i venstre spejl er for tæt', kind: 'correct', why: 'Rutinen er spejl, spejl, skulderblik, blink, og først derefter skiftet. Og hvis skulderblikket viser en bil, venter du.' },
       { t: 'Blink og træk over nu', kind: 'critical', why: 'Vognbaneskift uden orientering, med en bil i den blinde vinkel, er en alvorlig fejl og en reel ulykke.' },
       { t: 'Kig i bakspejlet og træk over', kind: 'serious', why: 'Bakspejlet viser ikke bilen ved siden af dig. Uden skulderblik er orienteringen ikke gennemført.' },
     ],
@@ -240,7 +240,7 @@ export const SCENARIOS = [
     question: 'Du har blinket. Hvad nu?',
     choices: [
       { t: 'Spejl og skulderblik til højre, så sving', kind: 'correct', why: 'Også når spejlet er tomt: skulderblikket til højre er det, der fanger cyklisten i den blinde vinkel. Sensoren ser efter, om du drejer hovedet.' },
-      { t: 'Spejlet er tomt, drej', kind: 'error', why: 'Du drejede sikkert denne gang — men manglende skulderblik er en orienteringsfejl, og sensoren noterer det hver gang.' },
+      { t: 'Spejlet er tomt, drej', kind: 'error', why: 'Du drejede sikkert denne gang, men manglende skulderblik er en orienteringsfejl, og sensoren noterer det hver gang.' },
       { t: 'Kig over venstre skulder', kind: 'error', why: 'Forkert side. Ved højresving er faren i højre side, hvor cykelstien er.' },
     ],
     timeout: 'minor',
@@ -251,7 +251,7 @@ export const SCENARIOS = [
     cue: 'Fortsæt ligeud ad villavejen',
     scene: { env: 'by', speed: 38, limit: 50, objects: [{ type: 'parkedDoor', lane: 'edgeR', d: 0.3, approach: 0.1 }] },
     choices: [
-      { t: 'Ned i fart, hold afstand til døren', kind: 'correct', why: 'En åben dør betyder, at der er en person. Afstand og fart ned — og kig efter fødder under bilen og hoveder i ruderne.' },
+      { t: 'Ned i fart, hold afstand til døren', kind: 'correct', why: 'En åben dør betyder, at der er en person. Afstand og fart ned, og kig efter fødder under bilen og hoveder i ruderne.' },
       { t: 'Hold kurs og fart, der er plads', kind: 'serious', why: 'Pladsen forsvinder, hvis døren åbnes mere, eller nogen træder ud. Det er manglende orientering mod en synlig risiko.' },
       { t: 'Dyt og kør forbi', kind: 'error', why: 'Hornet er ikke orientering. Farten ned og afstand er det, der virker.' },
     ],
@@ -263,7 +263,7 @@ export const SCENARIOS = [
     cue: 'Du skal standse ved busstoppestedet forude',
     scene: { env: 'by', speed: 40, limit: 50, mirrorRear: 'motorcycle', blinker: 'right', objects: [{ type: 'sign', sign: 'busstop', lane: 'sidewalkR', d: 0.3, approach: 0.1 }] },
     choices: [
-      { t: 'Blink tidligt og brems blødt — motorcyklen er tæt på', kind: 'correct', why: 'Orientering før opbremsning: bakspejlet først. Motorcyklisten bag dig har kortere bremseafstand end dig, men skal have tid til at reagere.' },
+      { t: 'Blink tidligt og brems blødt, motorcyklen er tæt på', kind: 'correct', why: 'Orientering før opbremsning: bakspejlet først. Motorcyklisten bag dig har kortere bremseafstand end dig, men skal have tid til at reagere.' },
       { t: 'Brems normalt, han må selv holde afstand', kind: 'error', why: 'Du har ret, men sensoren ser efter, om du orienterer dig bagud før du bremser. Det gjorde du ikke.' },
       { t: 'Stands brat ved skiltet', kind: 'serious', why: 'Pludselig opbremsning med en motorcykel tæt bag dig kan vælte ham. Manglende orientering med fare for andre.' },
     ],
@@ -276,7 +276,7 @@ export const SCENARIOS = [
     scene: { env: 'by', junction: { d: 0.22, side: 'right' }, zebra: 0.3, speed: 15, limit: 50, blinker: 'right', objects: [{ type: 'trafficLight', state: 'green', lane: 'sidewalkR', d: 0.24, approach: 0.05 }, { type: 'person', lane: 'sidewalkR', d: 0.34, approach: 0.0, dy: -4 }] },
     choices: [
       { t: 'Vent, fodgængeren har også grønt og er på vej over', kind: 'correct', why: 'Grønt for dig betyder ofte grønt for fodgængere på tværvejen. Ved svingning skal du holde tilbage for dem.' },
-      { t: 'Grønt er grønt — drej', kind: 'critical', why: 'Grønt lys ophæver ikke din vigepligt for fodgængere, der krydser den vej, du svinger ind på.' },
+      { t: 'Grønt er grønt, drej', kind: 'critical', why: 'Grønt lys ophæver ikke din vigepligt for fodgængere, der krydser den vej, du svinger ind på.' },
       { t: 'Drej hurtigt forbi ham', kind: 'critical', why: 'Du kørte foran en fodgænger i fodgængerfeltet. Alvorlig fejl.' },
     ],
     timeout: 'critical',
@@ -339,7 +339,7 @@ export const SCENARIOS = [
     scene: { env: 'by', junction: { d: 0.2, side: 'right' }, speed: 16, limit: 50, blinker: 'right', objects: [{ type: 'car', lane: 'oncoming', d: 0.35, approach: 0.1, oncoming: true }] },
     choices: [
       { t: 'Hold dig til højre og tag svinget tæt', kind: 'correct', why: 'Højresving tages i en lille bue, tæt på kantstenen. Så kommer du ikke over i sidevejens modkørende bane.' },
-      { t: 'Træk ud til venstre først for at få plads', kind: 'serious', why: 'Du sving ud i den modkørende bane — både på din egen vej og på sidevejen. Alvorlig placeringsfejl.' },
+      { t: 'Træk ud til venstre først for at få plads', kind: 'serious', why: 'Du sving ud i den modkørende bane, både på din egen vej og på sidevejen. Alvorlig placeringsfejl.' },
       { t: 'Tag svinget i en bred bue', kind: 'error', why: 'Bred bue ved højresving bringer dig over midten på sidevejen. Der kom ingen denne gang, men sensoren noterer det.' },
     ],
     timeout: 'minor',
@@ -350,7 +350,7 @@ export const SCENARIOS = [
     cue: 'Følg vejen, der er ingen cykelsti',
     scene: { env: 'land', speed: 80, limit: 80, objects: [{ type: 'cyclist', lane: 'edgeR', d: 0.45, approach: 0.15 }] },
     choices: [
-      { t: 'Ned i fart, hold afstand, overhal med god plads når der er frit', kind: 'correct', why: 'Ingen modkørende, så du kan overhale — men med mindst 1,5 meter til cyklisten og uden at skulle presse det.' },
+      { t: 'Ned i fart, hold afstand, overhal med god plads når der er frit', kind: 'correct', why: 'Ingen modkørende, så du kan overhale, men med mindst 1,5 meter til cyklisten og uden at skulle presse det.' },
       { t: 'Hold 80 og passér tæt, der er plads i banen', kind: 'serious', why: 'Passage af cyklist i 80 km/t med under en meters afstand er farlig og bedømmes som en alvorlig fejl.' },
       { t: 'Bliv bag cyklisten i flere hundrede meter', kind: 'error', why: 'Når der er frit, skal du overhale. Unødig venten bag langsom trafik er manglende hastighedstilpasning.' },
     ],

@@ -23,7 +23,7 @@ export function speak(text, { rate = 1, pitch = 1 } = {}) {
     if (voice) u.voice = voice;
     u.rate = rate; u.pitch = pitch;
     speechSynthesis.speak(u);
-  } catch { /* ingen stemme — teksten står der stadig */ }
+  } catch { /* ingen stemme, teksten står der stadig */ }
 }
 
 export function hush() {

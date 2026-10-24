@@ -1,4 +1,4 @@
-// Stiliseret forrude-scene i SVG. Ingen 3D-motor — kun geometri der ligner.
+// Stiliseret forrude-scene i SVG. Ingen 3D-motor, kun geometri der ligner.
 // Dybde d: 0 = lige foran bilen, 1 = horisont.
 
 const W = 400, H = 250, HORIZON = 112;

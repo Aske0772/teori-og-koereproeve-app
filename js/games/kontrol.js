@@ -25,7 +25,7 @@ export function mount(container, params = {}) {
     const known = KONTROL.filter(k => seen[k.id] && seen[k.id].hit > seen[k.id].miss).length;
     container.innerHTML = `<section class="screen">${topbar('Kontrolspørgsmål')}
       <h1>Kontrolprøven</h1>
-      <p>Til prøven trækkes ét opgavekort med tre kontrolnumre fra tre forskellige afsnit, og spejlene kontrolleres altid. Du skal <i>vise</i> det på bilen — uden værktøj — ikke bare sige det.</p>
+      <p>Til prøven trækkes ét opgavekort med tre kontrolnumre fra tre forskellige afsnit, og spejlene kontrolleres altid. Du skal <i>vise</i> det på bilen, uden værktøj, ikke bare sige det.</p>
       <div class="card"><div class="kv"><span>Du kan</span><b>${known} af ${KONTROL.length}</b></div></div>
       <div class="btnrow"><button class="btn full" id="run">Træk ${PER_RUN} kort</button></div>
       <div class="section"><h2>Alle afsnit</h2><ul class="menu">
@@ -76,7 +76,7 @@ export function mount(container, params = {}) {
     if (!browse) recordSkill('kontrol', score, { note: `${hit} af ${n} kontrolnumre` });
     container.innerHTML = `<section class="screen">${topbar('Kontrolspørgsmål', { step: 'Resultat' })}
       <div class="verdict-card"><div class="note">${browse ? 'Afsnit gennemgået' : 'Kontrolprøve'}</div><div class="big ${score >= 80 ? 'pass' : 'fail'}">${score}</div>
-      <p>${hit} af ${n}. ${score === 100 ? 'Alle kunne du. Næste skridt: find dem på en rigtig bil.' : 'De kort, du ikke kunne, kommer igen næste gang — oftere end de andre.'}</p></div>
+      <p>${hit} af ${n}. ${score === 100 ? 'Alle kunne du. Næste skridt: find dem på en rigtig bil.' : 'De kort, du ikke kunne, kommer igen næste gang, oftere end de andre.'}</p></div>
       <div class="btnrow"><button class="btn full" id="menu">Tilbage</button><button class="btn ghost full" onclick="location.hash='#/spil/biltjek'">Find dem på bilen</button></div></section>`;
     container.querySelector('#menu').addEventListener('click', menu);
   }

@@ -13,7 +13,7 @@ const ZONES = {
   blinkHoejre: { label: 'Blink højre', x: 62, y: 72, w: 16, h: 12 },
 };
 
-// Rutinen: spejl, spejl, tegn, skulderblik — så handling.
+// Rutinen: spejl, spejl, tegn, skulderblik, så handling.
 const MANOEUVRES = [
   { t: 'Vognbaneskift til venstre', seq: ['bak', 'venstreSpejl', 'blinkVenstre', 'venstreSkulder'] },
   { t: 'Vognbaneskift til højre', seq: ['bak', 'hoejreSpejl', 'blinkHoejre', 'hoejreSkulder'] },
@@ -52,7 +52,7 @@ function cockpitSVG() {
     <!-- blinkpile -->
     <path d="M120 212 l-14 10 l14 10 z" fill="#3CB55A" opacity=".9"/>
     <path d="M280 212 l14 10 l-14 10 z" fill="#3CB55A" opacity=".9"/>
-    <text x="200" y="196" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-size="12" fill="#AEB7BF">tryk på det, du kigger på — i rækkefølge</text>
+    <text x="200" y="196" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-size="12" fill="#AEB7BF">tryk på det, du kigger på, i rækkefølge</text>
   </svg>`;
 }
 
@@ -63,7 +63,7 @@ export function mount(container) {
   function intro() {
     container.innerHTML = `<section class="screen">${topbar('Skulderblik-rytme')}
       <h1>Spejl, spejl, blink, skulder</h1>
-      <p>Sensoren noterer hver manøvre, hvor orienteringen mangler eller kommer i forkert rækkefølge. Her er rutinen den samme hver gang — det er tempoet, der stiger.</p>
+      <p>Sensoren noterer hver manøvre, hvor orienteringen mangler eller kommer i forkert rækkefølge. Her er rutinen den samme hver gang, det er tempoet, der stiger.</p>
       <div class="card"><p><b>Rækkefølgen:</b> bakspejl, sidespejlet i den side du skal, blink, skulderblik til samme side. Tryk på zonerne i forruden.</p><p class="note">${ROUNDS} manøvrer. Tiden starter på 6 sekunder og ender under 3.</p></div>
       <div class="btnrow"><button class="btn full" id="start">Start</button></div></section>`;
     container.querySelector('#start').addEventListener('click', play);
@@ -117,7 +117,7 @@ export function mount(container) {
       if (ok && wrongThisRound === 0) hits++;
       totalMs += Math.min(ms, limit);
       log.push({ m: m.t, ok, wrong: wrongThisRound, ms: Math.round(ms), reason });
-      const fb = ok && wrongThisRound === 0 ? 'Rutinen sad.' : ok ? `Færdig, men ${wrongThisRound} forkert tryk undervejs — i bilen er det et blik det forkerte sted.` : `${reason}. I bilen betyder det, at du svinger uden at have orienteret dig.`;
+      const fb = ok && wrongThisRound === 0 ? 'Rutinen sad.' : ok ? `Færdig, men ${wrongThisRound} forkert tryk undervejs, i bilen er det et blik det forkerte sted.` : `${reason}. I bilen betyder det, at du svinger uden at have orienteret dig.`;
       container.querySelector('#seq').insertAdjacentHTML('afterend', `<div class="feedback ${ok && !wrongThisRound ? 'ok' : 'bad'}"><div class="verdict">${ok && !wrongThisRound ? 'Rigtigt' : 'Fejl'} · ${(ms / 1000).toFixed(1).replace('.', ',')} s</div><p>${esc(fb)}</p></div>`);
       timer = setTimeout(() => { round++; play(); }, 1100);
     }

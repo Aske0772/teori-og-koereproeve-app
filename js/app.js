@@ -2,6 +2,10 @@ import { get, save, readiness, STAMPS, STAMP_LIMIT, reset } from './state.js';
 import { SENSORS } from './data/sensors.js';
 import { hasDanishVoice, hush } from './voice.js';
 import { esc } from './ui.js';
+import { createGame } from './engine/game.js';
+import { createRenderer, VIEW } from './engine/render.js';
+import { ROUTES } from './data/routes.js';
+import * as koersel from './games/koersel.js';
 import * as beslutning from './games/beslutning.js';
 import * as skulderblik from './games/skulderblik.js';
 import * as fare from './games/fare.js';
@@ -15,53 +19,75 @@ const app = document.getElementById('app');
 const tabs = document.getElementById('tabs');
 let cleanup = null;
 
-/* ---------- skærme ---------- */
+/* ---------- hjem: spillet kører selv bag titlen ---------- */
+function attract(canvas) {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const route = ROUTES.bytur.build();
+  const game = createGame(route, { ghost: true, showFaults: false });
+  const r = createRenderer(canvas);
+  const G = game.g;
+  G.player.z = 60 * 5; G.player.speed = 9; G.player.x = 0.5;
+  let raf = null, last = performance.now(), alive = true;
+  const frame = now => {
+    if (!alive) return;
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    G.input.gas = G.player.speed < 10; G.input.brake = false;
+    G.input.steer = Math.max(-1, Math.min(1, (0.5 - G.player.x) * 3));
+    if (!reduce) game.update(dt);
+    r.draw(G);
+    raf = requestAnimationFrame(frame);
+  };
+  r.draw(G);
+  if (!reduce) raf = requestAnimationFrame(frame);
+  return () => { alive = false; cancelAnimationFrame(raf); };
+}
 
 function home() {
   const s = get();
-  const r = readiness(s);
+  const rd = readiness(s);
   const name = s.name || 'Elev';
   const stamps = STAMPS.map(st => {
-    const best = s.skills[st.id]?.best || 0;
-    const done = best >= STAMP_LIMIT;
-    return `<div class="stamp ${done ? 'done' : ''}" title="${esc(st.label.replace('-', ''))}: ${best}">${done ? st.label.replace('-', '<br>') : `${best}`}</div>`;
+    const best = s.skills[st.id]?.best || 0, done = best >= STAMP_LIMIT;
+    return `<div class="stamp ${done ? 'done' : ''}" title="${esc(st.label.replace('-', ''))}: ${best}">${done ? st.label.replace('-', '<br>') : best}</div>`;
   }).join('');
-  const streak = s.streakDays.length;
-  const last = s.log[0];
-  const msg = r === 0 ? 'Start med én kørsel, så tegner kortet sig.' : r < 50 ? 'Den svageste disciplin holder dig nede. Det er bevidst.' : r < 80 ? 'Du er på vej. Kør prøvedagen igennem et par gange.' : 'Alle discipliner er med. Nu er det nerverne, der skal trænes.';
-
+  const msg = rd === 0 ? 'Kør én tur, så begynder kortet at fylde sig.' : rd < 50 ? 'Den svageste disciplin holder dig nede. Det er meningen.' : rd < 80 ? 'På vej. Kør prøvedagen et par gange.' : 'Alle discipliner er med. Nu er det nerverne.';
   app.innerHTML = `
-  <section class="screen">
-    <h1 style="margin-bottom:12px">Køreprøven</h1>
-    <div class="licence" aria-label="Dit træningskørekort">
-      <div class="head">
-        <div><div class="country">DANMARK</div><div class="title">Træningskørekort · ikke et kørekort</div></div>
-        <div class="cat">B</div>
+  <section class="screen" style="padding-top:0">
+    <div class="hero">
+      <canvas width="${VIEW.W}" height="${VIEW.H}" aria-hidden="true"></canvas>
+      <div class="hero-copy">
+        <h1><span class="line"><span>Køre-</span></span><span class="line"><span>prøven</span></span></h1>
+        <p>Kør byturen, mens sensoren noterer. Samme fire fejlniveauer som til den rigtige prøve.</p>
+        <div class="hero-cta"><button class="cta" onclick="location.hash='#/spil/koersel'">Kør byturen</button><button class="cta ghost" onclick="location.hash='#/proeve'">Prøvedag</button></div>
       </div>
-      <div class="name">${esc(name)}</div>
-      <div class="stamps">${stamps}</div>
-      <div class="meter">Klar til prøven <b>${r}</b> af 100 · ${esc(msg)}</div>
+    </div>
+
+    <div class="section">
+      <div class="licence" aria-label="Dit træningskørekort">
+        <div class="head"><div><div class="country">DANMARK</div><div class="title">Træningskørekort, ikke et kørekort</div></div><div class="cat">B</div></div>
+        <div class="name">${esc(name)}</div>
+        <div class="stamps">${stamps}</div>
+        <div class="meter">Klar til prøven <b>${rd}</b> af 100. ${esc(msg)}</div>
+      </div>
     </div>
 
     <div class="section">
       <h2>I dag</h2>
       <ul class="menu">
-        <li><button onclick="location.hash='#/spil/skilt'"><span class="t">Skiltet på dagen</span><span class="d">Ét spørgsmål. Tager 20 sekunder.</span><span class="meta weak">${skilt.doneToday() ? 'Klaret' : 'Nyt'}</span></button></li>
-        <li><button onclick="location.hash='#/proeve'"><span class="t">Kør prøvedagen</span><span class="d">Venteværelse, kontrolspørgsmål, 25 minutters kørsel, dom.</span><span class="meta">${s.skills.proevedag.best || '–'}</span></button></li>
-        <li><button onclick="location.hash='#/traen'"><span class="t">Træn én disciplin</span><span class="d">Beslutningskørsel, skulderblik, fareopfattelse, kontrol.</span><span class="meta weak">${streak ? `${streak} dage` : ''}</span></button></li>
+        <li><button onclick="location.hash='#/spil/skilt'"><span class="t">Skiltet på dagen</span><span class="d">Ét spørgsmål. 20 sekunder.</span><span class="meta weak">${skilt.doneToday() ? 'Klaret' : 'Nyt'}</span></button></li>
+        <li><button onclick="location.hash='#/traen'"><span class="t">Træn én disciplin</span><span class="d">Skulderblik, fareopfattelse, kontrolspørgsmål, hurtige beslutninger.</span><span class="meta weak">${s.streakDays.length ? `${s.streakDays.length} dage` : ''}</span></button></li>
       </ul>
     </div>
 
-    ${last ? `<div class="section"><h2>Sidst</h2><div class="card"><div class="kv"><span>${esc(label(last.skill))}</span><b>${last.score}</b></div>${last.note ? `<p class="note" style="margin:8px 0 0">${esc(last.note)}</p>` : ''}</div></div>` : ''}
-
     <div class="section">
-      <p class="note">Dette er træning af beslutninger — ikke køreundervisning. Spillet erstatter ikke køretimer og lover ikke, at du består. Bedømmelsen følger faste regler, der er bygget efter Færdselsstyrelsens bedømmelsesområder.</p>
+      <p class="muted">Træning af beslutninger, ikke køreundervisning. Spillet erstatter ikke køretimer og lover ikke, at du består. Bedømmelsen er faste regler bygget efter Færdselsstyrelsens fire fejlniveauer.</p>
     </div>
   </section>`;
+  return attract(app.querySelector('.hero canvas'));
 }
 
 function label(skill) {
-  return { orientering: 'Orientering', vigepligt: 'Vigepligt', hastighed: 'Hastighed', placering: 'Placering', skulderblik: 'Skulderblik', fare: 'Fareopfattelse', kontrol: 'Kontrolspørgsmål', proevedag: 'Prøvedagen', beslutning: 'Beslutningskørsel' }[skill] || skill;
+  return { orientering: 'Orientering', vigepligt: 'Vigepligt', hastighed: 'Hastighed', placering: 'Placering', skulderblik: 'Skulderblik', fare: 'Fareopfattelse', kontrol: 'Kontrolspørgsmål', proevedag: 'Prøvedagen' }[skill] || skill;
 }
 
 function train() {
@@ -70,20 +96,21 @@ function train() {
   app.innerHTML = `
   <section class="screen">
     <h1>Træn</h1>
-    <p class="note">Hver øvelse tager 2–5 minutter. Stemplet kommer ved 80 point.</p>
+    <p class="muted">Hver øvelse tager 2 til 6 minutter. Stemplet kommer ved 80 point.</p>
     <div class="section">
       <h2>Bag rattet</h2>
       <ul class="menu">
-        <li><button onclick="location.hash='#/spil/beslutning'"><span class="t">Beslutningskørsel</span><span class="d">Bilen kører. Billedet fryser. Du har 2 sekunder.</span><span class="meta">${b('orientering')}</span></button></li>
-        <li><button onclick="location.hash='#/spil/skulderblik'"><span class="t">Skulderblik-rytme</span><span class="d">Spejl, spejl, skulder — i rigtig rækkefølge, hurtigere og hurtigere.</span><span class="meta">${b('skulderblik')}</span></button></li>
-        <li><button onclick="location.hash='#/spil/fare'"><span class="t">Fareopfattelse</span><span class="d">Tryk i det øjeblik, faren opstår. Point for at se den tidligt.</span><span class="meta">${b('fare')}</span></button></li>
+        <li class="wide"><button onclick="location.hash='#/spil/koersel'"><span class="t">Byturen</span><span class="d">3,2 km med kryds, rundkørsel, cyklister og lyskryds. Sensoren siger til undervejs.</span><span class="meta">${b('vigepligt')}</span></button></li>
+        <li><button onclick="location.hash='#/spil/skulderblik'"><span class="t">Skulderblik-rytme</span><span class="d">Spejl, spejl, blink, skulder. Tempoet stiger.</span><span class="meta">${b('skulderblik')}</span></button></li>
+        <li><button onclick="location.hash='#/spil/fare'"><span class="t">Fareopfattelse</span><span class="d">Tryk, når faren begynder. Point for at se den tidligt.</span><span class="meta">${b('fare')}</span></button></li>
+        <li><button onclick="location.hash='#/spil/beslutning'"><span class="t">Hurtige beslutninger</span><span class="d">Billedet fryser. Du har 2 sekunder.</span><span class="meta">${b('orientering')}</span></button></li>
       </ul>
     </div>
     <div class="section">
       <h2>Ved bilen</h2>
       <ul class="menu">
-        <li><button onclick="location.hash='#/spil/kontrol'"><span class="t">Kontrolspørgsmål</span><span class="d">Alle emner fra prøven. Spørgsmål, svar og hvordan du viser det.</span><span class="meta">${b('kontrol')}</span></button></li>
-        <li><button onclick="location.hash='#/spil/biltjek'"><span class="t">Find det på en rigtig bil</span><span class="d">Skattejagt på familiens bil. Kryds af, når du har fundet det.</span><span class="meta weak">${Object.values(s.bilTjek).filter(Boolean).length} fundet</span></button></li>
+        <li><button onclick="location.hash='#/spil/kontrol'"><span class="t">Kontrolspørgsmål</span><span class="d">Alle afsnit fra kontrolprøven. Spørgsmål, krav og hvordan du viser det.</span><span class="meta">${b('kontrol')}</span></button></li>
+        <li><button onclick="location.hash='#/spil/biltjek'"><span class="t">Find det på en rigtig bil</span><span class="d">Skattejagt på familiens bil.</span><span class="meta weak">${Object.values(s.bilTjek).filter(Boolean).length} fundet</span></button></li>
       </ul>
     </div>
     <div class="section">
@@ -99,28 +126,25 @@ function settings() {
   const s = get();
   app.innerHTML = `
   <section class="screen">
-    <h1>Indstillinger</h1>
+    <h1>Mere</h1>
     <div class="card">
-      <label for="name" class="note">Navnet på kørekortet</label>
-      <input id="name" type="text" value="${esc(s.name)}" placeholder="Dit fornavn" maxlength="24" autocomplete="given-name">
+      <label for="name" class="muted">Navnet på kørekortet</label>
+      <input id="name" type="text" value="${esc(s.name)}" placeholder="Dit fornavn" maxlength="24" autocomplete="given-name" style="margin-top:6px">
     </div>
     <div class="card">
-      <div class="toggle-row"><div><div>Sensoren taler</div><div class="note">${hasDanishVoice() ? 'Dansk stemme fundet på telefonen.' : 'Ingen dansk stemme fundet — teksten vises altid.'}</div></div><input type="checkbox" id="tts" ${s.tts ? 'checked' : ''}></div>
-      <div class="toggle-row"><div><div>Sensor</div><div class="note">Tilfældig er mest realistisk.</div></div>
-        <select id="sensor" style="font:inherit;padding:8px;border-radius:8px;border:1px solid var(--streg)">
-          <option value="random" ${s.sensorId === 'random' ? 'selected' : ''}>Tilfældig</option>
-          ${SENSORS.map(x => `<option value="${x.id}" ${s.sensorId === x.id ? 'selected' : ''}>${x.name} – ${x.style}</option>`).join('')}
-        </select></div>
+      <div class="toggle-row"><div><div>Sensoren taler</div><div class="muted">${hasDanishVoice() ? 'Dansk stemme fundet på telefonen.' : 'Ingen dansk stemme fundet. Teksten vises altid.'}</div></div><input type="checkbox" id="tts" ${s.tts ? 'checked' : ''}></div>
+      <div class="toggle-row"><div><div>Sensor</div><div class="muted">Tilfældig er mest realistisk.</div></div>
+        <select id="sensor"><option value="random" ${s.sensorId === 'random' ? 'selected' : ''}>Tilfældig</option>${SENSORS.map(x => `<option value="${x.id}" ${s.sensorId === x.id ? 'selected' : ''}>${x.name}, ${x.style.toLowerCase()}</option>`).join('')}</select></div>
     </div>
     <div class="card">
-      <p>Alt gemmes kun på denne telefon. Der er ingen konto og ingen server.</p>
+      <p>Alt gemmes kun på denne telefon. Ingen konto, ingen server.</p>
       <button class="btn ghost" id="reset">Slet alt og start forfra</button>
     </div>
     <div class="section"><h2>Om spillet</h2>
       <p>Spillet træner de beslutninger, sensoren bedømmer til den praktiske køreprøve: orientering, hastighedstilpasning, placering, vigepligt og tegngivning. Bedømmelsen er faste regler, ikke AI.</p>
       <p>Det erstatter ikke køreskolen. Køreuddannelsen har mindst 30 teorilektioner og 24 kørelektioner, heraf 3 på manøvrebane og 4 på køreteknisk anlæg (regler fra 1. juli 2026). Det kan ikke øves på en telefon.</p>
-      <p>I 2025 blev 67,8 % af de praktiske prøver bestået på landsplan — fra 55,7 % i København til 81,4 % i Østjylland (Færdselsstyrelsens prøvestatistik).</p>
-      <p class="note">Kilder til indholdet står i <a href="https://github.com/Aske0772/koere-og-teoriproeven/blob/main/docs/RESEARCH.md">docs/RESEARCH.md</a>.</p>
+      <p>I 2025 blev 67,8 % af de praktiske prøver bestået på landsplan, fra 55,7 % i København til 81,4 % i Østjylland (Færdselsstyrelsens prøvestatistik).</p>
+      <p class="muted">Tastatur i kørslen: piletaster eller WASD, Q/E blink, Z/C skulderblik, 1/2/3 spejle. Kilder står i <a href="https://github.com/Aske0772/teori-og-koereproeve-app/blob/main/docs/RESEARCH.md">docs/RESEARCH.md</a>.</p>
     </div>
   </section>`;
   app.querySelector('#name').addEventListener('change', e => save({ name: e.target.value.trim() }));
@@ -130,29 +154,29 @@ function settings() {
 }
 
 /* ---------- router ---------- */
-
 const routes = {
-  '': home,
-  '/': home,
+  '': home, '/': home,
   '/traen': train,
-  '/proeve': (p) => proevedag.mount(app, p),
+  '/proeve': p => proevedag.mount(app, p),
   '/indstillinger': settings,
-  '/spil/beslutning': (p) => beslutning.mount(app, p),
-  '/spil/skulderblik': (p) => skulderblik.mount(app, p),
-  '/spil/fare': (p) => fare.mount(app, p),
-  '/spil/kontrol': (p) => kontrol.mount(app, p),
-  '/spil/biltjek': (p) => biltjek.mount(app, p),
-  '/spil/passager': (p) => passager.mount(app, p),
-  '/spil/skilt': (p) => skilt.mount(app, p),
+  '/spil/koersel': p => koersel.mount(app, p),
+  '/spil/beslutning': p => beslutning.mount(app, p),
+  '/spil/skulderblik': p => skulderblik.mount(app, p),
+  '/spil/fare': p => fare.mount(app, p),
+  '/spil/kontrol': p => kontrol.mount(app, p),
+  '/spil/biltjek': p => biltjek.mount(app, p),
+  '/spil/passager': p => passager.mount(app, p),
+  '/spil/skilt': p => skilt.mount(app, p),
 };
+const PLAYING = ['/spil/koersel', '/proeve'];
 
 function render() {
   if (typeof cleanup === 'function') { try { cleanup(); } catch {} }
-  cleanup = null;
-  hush();
+  cleanup = null; hush();
   const [path, query] = location.hash.replace(/^#/, '').split('?');
   const fn = routes[path] || home;
   const params = Object.fromEntries(new URLSearchParams(query || ''));
+  document.body.classList.toggle('playing', PLAYING.includes(path));
   const r = fn(params);
   if (typeof r === 'function') cleanup = r;
   window.scrollTo(0, 0);
@@ -164,9 +188,9 @@ function renderTabs(path) {
     ['#/', 'Hjem', '<path d="M3 11l9-8 9 8v9a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2z"/>'],
     ['#/traen', 'Træn', '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'],
     ['#/proeve', 'Prøvedag', '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>'],
-    ['#/indstillinger', 'Mere', '<circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4.9a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.5a7 7 0 0 0-2 1.2l-2.4-.9-2 3.4 2 1.6A7 7 0 0 0 5 12a7 7 0 0 0 .1 1.2l-2 1.6 2 3.4 2.4-.9a7 7 0 0 0 2 1.2L10 21h4l.5-2.5a7 7 0 0 0 2-1.2l2.4.9 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"/>'],
+    ['#/indstillinger', 'Mere', '<circle cx="12" cy="12" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>'],
   ];
-  const active = (href) => href === '#/' ? (path === '' || path === '/') : href === '#/traen' ? (path.startsWith('/traen') || path.startsWith('/spil')) : path.startsWith(href.slice(1));
+  const active = href => href === '#/' ? (path === '' || path === '/') : href === '#/traen' ? (path.startsWith('/traen') || path.startsWith('/spil')) : path.startsWith(href.slice(1));
   tabs.innerHTML = items.map(([href, l, ico]) => `<button class="${active(href) ? 'on' : ''}" onclick="location.hash='${href}'" aria-current="${active(href) ? 'page' : 'false'}"><svg viewBox="0 0 24 24">${ico}</svg>${l}</button>`).join('');
 }
 

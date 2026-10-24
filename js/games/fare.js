@@ -38,11 +38,11 @@ export function scoreFor(clip, taps) {
   }
   const { start, end } = clip.hazard;
   const inWin = taps.filter(t => t >= start && t <= end);
-  if (!inWin.length) return { points: 0, max: 5, pattern: false, note: taps.some(t => t > end) ? 'For sent — faren var allerede nået.' : 'Du så den ikke.' };
+  if (!inWin.length) return { points: 0, max: 5, pattern: false, note: taps.some(t => t > end) ? 'For sent, faren var allerede nået.' : 'Du så den ikke.' };
   const first = Math.min(...inWin);
   const seg = Math.floor((first - start) / ((end - start) / 5));
   const points = Math.max(1, 5 - seg);
-  return { points, max: 5, pattern: false, note: points >= 4 ? 'Tidligt set.' : points === 3 ? 'Set, men du kunne have set den før.' : 'Sent — du reagerede, da faren var tæt på.', first };
+  return { points, max: 5, pattern: false, note: points >= 4 ? 'Tidligt set.' : points === 3 ? 'Set, men du kunne have set den før.' : 'Sent, du reagerede, da faren var tæt på.', first };
 }
 
 export function mount(container) {
@@ -53,8 +53,8 @@ export function mount(container) {
   function intro() {
     container.innerHTML = `<section class="screen">${topbar('Fareopfattelse')}
       <h1>Tryk, når faren opstår</h1>
-      <p>En fare er noget, der kan tvinge dig til at bremse eller dreje. Du får flest point for at trykke, når den <i>begynder</i> at udvikle sig — ikke når den er foran kølerhjelmen.</p>
-      <div class="card"><p>${CLIPS_PER_RUN} korte klip på 7–8 sekunder. Ét tryk er nok. Trykker du hele tiden eller i rytme, får klippet 0 point — sådan er det også i den britiske hazard perception-test, som systemet er bygget efter.</p><p class="note">Nogle klip har ingen fare.</p></div>
+      <p>En fare er noget, der kan tvinge dig til at bremse eller dreje. Du får flest point for at trykke, når den <i>begynder</i> at udvikle sig, ikke når den er foran kølerhjelmen.</p>
+      <div class="card"><p>${CLIPS_PER_RUN} korte klip på 7–8 sekunder. Ét tryk er nok. Trykker du hele tiden eller i rytme, får klippet 0 point, sådan er det også i den britiske hazard perception-test, som systemet er bygget efter.</p><p class="note">Nogle klip har ingen fare.</p></div>
       <div class="btnrow"><button class="btn full" id="start">Start</button></div></section>`;
     container.querySelector('#start').addEventListener('click', () => { clips = [...HAZARDS].sort(() => Math.random() - 0.5).slice(0, CLIPS_PER_RUN); idx = 0; total = 0; max = 0; log.length = 0; play(); });
   }
@@ -123,7 +123,7 @@ export function mount(container) {
     recordSkill('fare', score, { note: `${total} af ${max} point` });
     container.innerHTML = `<section class="screen">${topbar('Fareopfattelse', { step: 'Resultat' })}
       <div class="verdict-card"><div class="note">Fareopfattelse</div><div class="big ${score >= 80 ? 'pass' : 'fail'}">${score}</div>
-      <p>${total} af ${max} point. ${score >= 80 ? 'Du ser farerne, mens de udvikler sig. Det er det, der giver dig tid i bilen.' : 'Du ser farerne, men sent. Kig længere frem — på fortovet, i sidevejene, på bremselygterne to biler fremme.'}</p></div>
+      <p>${total} af ${max} point. ${score >= 80 ? 'Du ser farerne, mens de udvikler sig. Det er det, der giver dig tid i bilen.' : 'Du ser farerne, men sent. Kig længere frem, på fortovet, i sidevejene, på bremselygterne to biler fremme.'}</p></div>
       <ul class="replay-list" style="margin-top:14px">${log.map(l => `<li><div class="q">${esc(l.clip.title)}</div><div class="${l.s.points >= 3 ? 'why' : 'you'}">${l.clip.hazard ? `${l.s.points} af 5` : (l.taps ? 'Trykkede uden fare' : 'Rigtigt: ingen fare')} · ${esc(l.s.note)}</div></li>`).join('')}</ul>
       <div class="btnrow"><button class="btn full" onclick="location.hash='#/traen'">Færdig</button><button class="btn ghost full" id="again">Igen</button></div></section>`;
     container.querySelector('#again').addEventListener('click', intro);

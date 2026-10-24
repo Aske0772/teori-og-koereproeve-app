@@ -4,8 +4,8 @@
   "description": "Træn beslutningerne fra den praktiske køreprøve. Et spil, ikke køreundervisning.",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#E6E9EC",
-  "theme_color": "#E6E9EC",
+  "background_color": "#0f1114",
+  "theme_color": "#0f1114",
   "lang": "da",
   "icons": [{ "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
 }

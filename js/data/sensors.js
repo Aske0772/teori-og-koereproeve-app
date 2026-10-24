@@ -1,4 +1,4 @@
-// Sensorerne. Samme anvisninger, forskellig tone — så man lærer ikke at læse humøret.
+// Sensorerne. Samme anvisninger, forskellig tone, så man lærer ikke at læse humøret.
 // Bedømmelsen er altid den samme uanset sensor.
 
 export const SENSORS = [
@@ -23,12 +23,12 @@ export const SENSORS = [
     style: 'Den venlige',
     color: '#2F7D9A',
     initials: 'M',
-    intro: 'Hej, og velkommen. Tag det roligt — jeg vil bare se dig køre, som du plejer. Jeg giver anvisningerne i god tid.',
+    intro: 'Hej, og velkommen. Tag det roligt, jeg vil bare se dig køre, som du plejer. Jeg giver anvisningerne i god tid.',
     cue: t => `${t}, tak.`,
     good: ['Godt.', 'Fint set.', 'Sådan.'],
     minor: ['Okay.', 'Hold øje med det.', 'Lidt sent, men okay.'],
     serious: ['Vi kører videre, bare rolig.', 'Det tager vi bagefter. Kør videre.'],
-    verdictFail: 'Jeg er ked af det, men prøven er ikke bestået. Du kørte pænt — det var én ting, der blev afgørende.',
+    verdictFail: 'Jeg er ked af det, men prøven er ikke bestået. Du kørte pænt, det var én ting, der blev afgørende.',
     verdictPass: 'Det er bestået, tillykke! Du har et par ting at arbejde videre med, dem tager vi nu.',
     waiting: 'Hun smiler og spørger, om du har haft en god morgen.',
   },
@@ -38,7 +38,7 @@ export const SENSORS = [
     style: 'Den utålmodige',
     color: '#8A4B2E',
     initials: 'J',
-    intro: 'Så. Vi kører 25 minutter, jeg siger hvor. Lad være med at gætte, hvad jeg tænker — bare kør.',
+    intro: 'Så. Vi kører 25 minutter, jeg siger hvor. Lad være med at gætte, hvad jeg tænker, bare kør.',
     cue: t => `${t}.`,
     good: ['', 'Ja.', ''],
     minor: ['Hm.', 'Kom så.', 'Det var sent.'],
